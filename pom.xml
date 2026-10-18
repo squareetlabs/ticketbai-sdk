@@ -1,0 +1,71 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.squareetlabs</groupId>
+  <artifactId>ticketbai</artifactId>
+  <packaging>jar</packaging>
+  <version>0.1.0-SNAPSHOT</version>
+  <name>ticketbai</name>
+  <description>Java package for TicketBAI electronic invoicing (Araba, Bizkaia and Gipuzkoa)</description>
+  <url>https://github.com/squareetlabs/ticketbai-sdk</url>
+
+  <licenses>
+    <license>
+      <name>MIT License</name>
+      <url>https://github.com/squareetlabs/ticketbai-sdk/blob/main/LICENSE</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <name>Alberto Rial Barreiro</name>
+      <organization>SquareetLabs</organization>
+      <organizationUrl>https://www.squareet.com</organizationUrl>
+    </developer>
+    <developer>
+      <name>Jacobo Cantorna Cigarran</name>
+      <organization>SquareetLabs</organization>
+      <organizationUrl>https://www.squareet.com</organizationUrl>
+    </developer>
+  </developers>
+
+  <scm>
+    <connection>scm:git:git://github.com/squareetlabs/ticketbai-sdk.git</connection>
+    <developerConnection>scm:git:ssh://git@github.com/squareetlabs/ticketbai-sdk.git</developerConnection>
+    <url>https://github.com/squareetlabs/ticketbai-sdk</url>
+  </scm>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.release>11</maven.compiler.release>
+    <junit.version>5.10.2</junit.version>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>${junit.version}</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.13.0</version>
+        <configuration>
+          <release>${maven.compiler.release}</release>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.2.5</version>
+      </plugin>
+    </plugins>
+  </build>
+</project>

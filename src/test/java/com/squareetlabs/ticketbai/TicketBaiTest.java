@@ -46,7 +46,9 @@ class TicketBaiTest {
             }
 
             String qr = last.getQrUrl();
-            assertTrue(qr.startsWith("https://tbai.prep.gipuzkoa.eus/qr/?id=" + last.getIdentifier().getValue()), qr);
+            // El código lleva caracteres del Base64 de la firma: en la URL van codificados (/ → %2F, + → %2B).
+            String encodedId = java.net.URLEncoder.encode(last.getIdentifier().getValue(), StandardCharsets.UTF_8);
+            assertTrue(qr.startsWith("https://tbai.prep.gipuzkoa.eus/qr/?id=" + encodedId + "&"), qr);
             assertTrue(qr.contains("&s=F2026&nf=3&i=1210.00&cr="), qr);
             assertEquals(Crc8.compute(qr.substring(0, qr.lastIndexOf("&cr="))), qr.substring(qr.lastIndexOf('=') + 1));
 
@@ -55,6 +57,25 @@ class TicketBaiTest {
             assertEquals(List.of(), SignatureVerifier.verify(annulment.getBytes(), Territory.GIPUZKOA));
             String xml = new String(annulment.getBytes(), StandardCharsets.UTF_8);
             assertTrue(xml.contains("<NumFactura>3</NumFactura>") && xml.contains("<SerieFactura>F2026</SerieFactura>"), xml);
+        }
+    }
+
+    @Test
+    @DisplayName("Una factura con errores de negocio no se firma: la excepción trae todos los problemas")
+    void invalidInvoiceIsNotSigned() {
+        try (TicketBaiSigner signer = TestInvoices.signer()) {
+            TicketBai tbai = TicketBai.builder().territory(Territory.GIPUZKOA).environment(Environment.TEST)
+                    .software(TestInvoices.TEST_SOFTWARE).signer(signer).build();
+            Invoice unbalanced = Invoice.builder()
+                    .issuer("B12345674", "CONSTRUCCIONES DE PRUEBA SL").number("1")
+                    .issuedAt(java.time.LocalDate.of(2026, 10, 18), java.time.LocalTime.NOON).description("d")
+                    .totalAmount(new java.math.BigDecimal("999"))
+                    .regimeKey(com.squareetlabs.ticketbai.model.Codes.RegimeKey.GENERAL)
+                    .breakdown(TestInvoices.simple("1").getBreakdown()).build();
+
+            com.squareetlabs.ticketbai.validation.InvalidInvoiceException e = assertThrows(
+                    com.squareetlabs.ticketbai.validation.InvalidInvoiceException.class, () -> tbai.issue(unbalanced, null));
+            assertEquals(3, e.getIssues().size(), e.getIssues().toString());
         }
     }
 
@@ -68,7 +89,7 @@ class TicketBaiTest {
                     .issuer("B12345674", "CONSTRUCCIONES DE PRUEBA SL")
                     .series("SERIE-DEMASIADO-LARGA-PARA-TICKETBAI").number("1")
                     .issuedAt(java.time.LocalDate.of(2026, 10, 18), java.time.LocalTime.NOON)
-                    .description("d").totalAmount(java.math.BigDecimal.TEN)
+                    .description("d").totalAmount(new java.math.BigDecimal("1210"))
                     .regimeKey(com.squareetlabs.ticketbai.model.Codes.RegimeKey.GENERAL)
                     .breakdown(TestInvoices.simple("1").getBreakdown())
                     .build();

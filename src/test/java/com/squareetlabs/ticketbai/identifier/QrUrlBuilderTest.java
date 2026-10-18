@@ -52,4 +52,13 @@ class QrUrlBuilderTest {
         assertTrue(url.startsWith("https://tbai.prep.gipuzkoa.eus/qr/?id="), url);
         assertTrue(url.contains("&s=&nf=419&i=1.00&cr="), url);
     }
+
+    @Test
+    @DisplayName("Los caracteres del Base64 de la firma (+ y /) del código van codificados en la URL")
+    void encodesBase64CharactersOfTheIdentifier() {
+        TbaiIdentifier id = TbaiIdentifier.of("A01111111", java.time.LocalDate.of(2021, 11, 4), "bQSGa6zcU9m+p/restodefirma");
+        String url = QrUrlBuilder.build(Territory.ARABA, Environment.PRODUCTION, id, "A", "1", new BigDecimal("1"));
+
+        assertTrue(url.contains("?id=TBAI-A01111111-041121-bQSGa6zcU9m%2Bp-"), url);
+    }
 }

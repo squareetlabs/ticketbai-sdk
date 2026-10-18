@@ -8,6 +8,9 @@ import com.squareetlabs.ticketbai.model.Invoice;
 import com.squareetlabs.ticketbai.model.Software;
 import com.squareetlabs.ticketbai.signature.SignedXml;
 import com.squareetlabs.ticketbai.signature.TicketBaiSigner;
+import com.squareetlabs.ticketbai.validation.InvalidInvoiceException;
+import com.squareetlabs.ticketbai.validation.InvoiceValidator;
+import com.squareetlabs.ticketbai.validation.ValidationIssue;
 import com.squareetlabs.ticketbai.validation.XsdValidator;
 import com.squareetlabs.ticketbai.xml.AnnulmentXmlBuilder;
 import com.squareetlabs.ticketbai.xml.InvoiceXmlBuilder;
@@ -37,6 +40,7 @@ public final class TicketBai {
     private final Software software;
     private final String deviceSerial;
     private final TicketBaiSigner signer;
+    private final InvoiceValidator validator;
 
     private TicketBai(Builder b) {
         this.territory = Objects.requireNonNull(b.territory, "territory");
@@ -44,6 +48,7 @@ public final class TicketBai {
         this.software = Objects.requireNonNull(b.software, "software");
         this.deviceSerial = b.deviceSerial;
         this.signer = Objects.requireNonNull(b.signer, "signer");
+        this.validator = b.validator;
     }
 
     public static Builder builder() {
@@ -54,10 +59,15 @@ public final class TicketBai {
      * Construye y firma el fichero de alta, comprueba que cumple el XSD y calcula el código TicketBAI y el QR.
      *
      * @param previous eslabón de la factura anterior del mismo emisor, o {@code null} si es la primera
-     * @throws IllegalStateException si el fichero firmado no cumple el XSD (datos que el modelo no puede impedir, como
-     *                               un texto demasiado largo)
+     * @throws InvalidInvoiceException si la validación de negocio encuentra errores (no se firma nada)
+     * @throws IllegalStateException   si el fichero firmado no cumple el XSD (datos que el modelo no puede impedir, como
+     *                                 un texto demasiado largo)
      */
     public IssuedInvoice issue(Invoice invoice, ChainLink previous) {
+        List<ValidationIssue> issues = validator.validate(invoice, territory);
+        if (issues.stream().anyMatch(ValidationIssue::isError)) {
+            throw new InvalidInvoiceException(issues);
+        }
         SignedXml signed = signer.sign(InvoiceXmlBuilder.build(invoice, previous, software, deviceSerial), territory);
         requireValid(signed, XsdValidator.Schema.INVOICE);
         TbaiIdentifier identifier = TbaiIdentifier.of(invoice.getIssuer().getNif(), invoice.getIssueDate(),
@@ -66,7 +76,7 @@ public final class TicketBai {
                 invoice.getTotalAmount());
         ChainLink link = ChainLink.of(invoice.getSeries(), invoice.getNumber(), invoice.getIssueDate(),
                 signed.getSignatureValue());
-        return new IssuedInvoice(signed, identifier, qrUrl, link);
+        return new IssuedInvoice(signed, identifier, qrUrl, link, issues);
     }
 
     /** Construye y firma el fichero de anulación y comprueba que cumple el XSD. */
@@ -98,8 +108,15 @@ public final class TicketBai {
         private Software software;
         private String deviceSerial;
         private TicketBaiSigner signer;
+        private InvoiceValidator validator = InvoiceValidator.strict();
 
         private Builder() {
+        }
+
+        /** Validación de negocio previa a la firma; por defecto, {@link InvoiceValidator#strict()}. */
+        public Builder validator(InvoiceValidator validator) {
+            this.validator = Objects.requireNonNull(validator, "validator");
+            return this;
         }
 
         public Builder territory(Territory territory) {

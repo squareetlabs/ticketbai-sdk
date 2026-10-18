@@ -20,7 +20,7 @@ Paquete Java 11+ para emitir facturas con **TicketBAI**, el sistema de las Hacie
 | Firma XAdES-EPES enveloped con la política del territorio (EU DSS 5.11.1) | ✅ |
 | Verificación local de la firma (API del JDK) | ✅ Verifica las firmas reales de los ejemplos de Álava |
 | Fachada `TicketBai`: emitir (firma, XSD, código, QR, eslabón) y anular | ✅ |
-| Validación de negocio (cuadres, claves compatibles, campos por territorio) | Pendiente |
+| Validación de negocio (cuadres, claves compatibles, campos por territorio) | ✅ Reglas publicadas, con su fuente; errores bloquean la firma |
 | Envío REST a Gipuzkoa y Álava (alta, anulación, Zuzendu) | Pendiente |
 | Envío por lotes al LROE de Bizkaia (modelos 240/140) | Pendiente |
 
@@ -62,6 +62,11 @@ try (TicketBaiSigner signer = TicketBaiSigner.pkcs12(p12Bytes, password)) {
 
 > [!IMPORTANT]
 > El encadenamiento es responsabilidad de quien llama: hay que guardar `getChainLink()` y pasarlo a la siguiente factura del mismo emisor, en orden y sin emitir dos facturas del mismo emisor a la vez.
+
+## Pendiente de confirmar con las Diputaciones
+
+- **URL del QR:** el código TicketBAI lleva caracteres del Base64 de la firma (`+`, `/`). El SDK los codifica (`%2B`, `%2F`) y calcula el CRC-8 sobre la URL ya codificada, como dice el Anexo V. Hay que comprobarlo con la herramienta de pruebas del QR de Bizkaia (`pruebatuz.bizkaia.eus/B4PEQR0C/test`) y con las URL de pruebas de Gipuzkoa y Álava.
+- **Tolerancia de los cuadres:** no está publicada; el validador es exacto por defecto (`InvoiceValidator.strict().withTolerance(...)` para ampliarla).
 
 ## Decisiones
 

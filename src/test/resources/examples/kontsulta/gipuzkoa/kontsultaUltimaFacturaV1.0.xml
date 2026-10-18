@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<T:KontsultaUltimoTicketBAI xmlns:T="urn:ticketbai:kontsultaultima" xmlns:T1="urn:ticketbai:emision" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ticketbai:kontsultaultima ../../HTBKontsultaWEB/src/main/resources/kontsultaUltimaFacturaV1.0.xsd ">
+  <Cabecera>
+    <IDVersion>1.0</IDVersion>
+    <NifEmisor>99999972C</NifEmisor>
+  </Cabecera>
+</T:KontsultaUltimoTicketBAI>

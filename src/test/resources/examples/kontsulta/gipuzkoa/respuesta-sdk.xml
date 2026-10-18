@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<T:KontsultaTicketBAIResponse xmlns:T="urn:ticketbai:contsultaRespuesta">
+  <Cabecera>
+    <Ejercicio>2025</Ejercicio>
+    <Emisor>
+      <NIF>99999972C</NIF>
+    </Emisor>
+  </Cabecera>
+  <ResultadoConsulta>
+    <FechaHoraConsulta>20-03-2025 09:15:00</FechaHoraConsulta>
+    <NumPaginaConsulta>1</NumPaginaConsulta>
+    <ExistenRegistros>S</ExistenRegistros>
+    <Paginacion>
+      <NumPaginasTotales>1</NumPaginasTotales>
+      <ExistenMasRegistros>N</ExistenMasRegistros>
+      <NumRegistrosTotales>1</NumRegistrosTotales>
+    </Paginacion>
+    <Error>
+      <Descripcion/>
+      <Azalpena/>
+    </Error>
+  </ResultadoConsulta>
+  <FacturasEmitidas>
+    <Factura>
+      <DatosFactura>
+        <CabeceraFactura>
+          <NumFactura>0008</NumFactura>
+          <FechaHoraExpedicionFactura>15-03-2025</FechaHoraExpedicionFactura>
+          <FechaOperacionFactura>15-03-2025</FechaOperacionFactura>
+        </CabeceraFactura>
+        <Sujetos>
+          <Emisor>
+            <NIF>99999972C</NIF>
+            <ApellidosNombreRazonSocial>EMISOR DE PRUEBA SL</ApellidosNombreRazonSocial>
+          </Emisor>
+        </Sujetos>
+        <ImporteTotalFactura>60.50</ImporteTotalFactura>
+        <IdentificadorTBAI>TBAI-99999972C-150325-Pq7Rs8Tu9Vw0X-003</IdentificadorTBAI>
+        <SignatureValue>Pq7Rs8Tu9Vw0Xy1Za2Bc3De4Fg5Hi6Jk7Lm8No9Pq0Rs1Tu2Vw3Xy4Za5Bc6De7Fg8Hi9Jk0Lm1No2Pq3Rs4Tu5Vw6Xy7Za8Bc9D</SignatureValue>
+      </DatosFactura>
+      <DatosPresentacion>
+        <FechaHoraPresentacionAlta>15-03-2025 12:00:04</FechaHoraPresentacionAlta>
+      </DatosPresentacion>
+      <SituacionRegistro>
+        <Estado>M</Estado>
+      </SituacionRegistro>
+    </Factura>
+  </FacturasEmitidas>
+</T:KontsultaTicketBAIResponse>

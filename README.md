@@ -26,7 +26,7 @@ Paquete Java 11+ para emitir facturas con **TicketBAI**, el sistema de las Hacie
 | Envío al LROE de Bizkaia, modelos 240 y 140: alta (`A00`), modificación (`M00`) y anulación (`AN0`); lotes de hasta 1.000, GZIP y cabeceras `eus-bizkaia-n3` | ✅ Reconstruye los cuatro envíos oficiales (alta y anulación de los dos modelos) y lee sus respuestas; probado con TLS mutuo |
 | Modelo 140: datos de renta por ingreso (epígrafe del IAE, territorio, referencia catastral, IRPF distinto de la base del IVA, criterio de caja) | ✅ |
 | Consulta del LROE (`C00`), modelos 240 y 140: filtros, paginación, estado de cada factura y recuperación del eslabón | ✅ Reconstruye las dos peticiones oficiales y lee sus respuestas con y sin resultados; probado con TLS mutuo |
-| Consulta en Gipuzkoa y Álava (Kontsulta) | Pendiente |
+| Kontsulta (Gipuzkoa y Álava): facturas enviadas por páginas y última factura, con estado, errores y recuperación del eslabón | ✅ Reconstruye las peticiones oficiales de los dos territorios y valida con sus XSD (Álava 1.2.3, Gipuzkoa 1.0); probado con TLS mutuo |
 | Modelo 240: `OtraInformacionTrascendenciaTributaria` (opcional) | Pendiente |
 
 ## Uso
@@ -128,6 +128,21 @@ page.latest().map(LroeQueryResult.Invoice::toChainLink);   // candidata a últim
 
 El nombre del obligado en el XML se toma de `LroeTaxpayer` («APELLIDO1 APELLIDO2 NOMBRE» en una persona física). Si la Diputación lo tiene en otro orden, `withFullName(...)` lo fija; los ejemplos oficiales de alta y de consulta usan órdenes distintos.
 
+### Consulta (Gipuzkoa y Álava, Kontsulta)
+
+El XML de consulta no se firma. El certificado decide qué se ve: el del emisor, todas sus facturas; un representante o un dispositivo, solo las que envió con ese certificado. Los envíos rechazados no aparecen.
+
+```java
+KontsultaClient kontsulta = new KontsultaClient(Territory.ARABA, Environment.TEST, tls);
+KontsultaResult page = kontsulta.query(KontsultaQuery.of(Territory.ARABA, "B12345674", Year.of(2026), KontsultaQuery.Period.Q1)
+        .series("A2026").showErrors(true).page(1));
+KontsultaResult last = kontsulta.latest("B12345674");   // la última factura admitida
+last.latest().map(KontsultaResult.Invoice::toChainLink);
+```
+
+> [!WARNING]
+> Álava actualiza los datos de consulta una vez al día (devuelve los del día anterior): no sirve para recuperar la cadena justo después de emitir. Gipuzkoa no ha publicado la URL de producción de Kontsulta; hasta entonces, se pasa con el constructor de URIs explícitas. Al recorrer varias páginas, fije `submittedBetween(...)`: sin él, una factura recibida entre dos peticiones puede repetirse en dos páginas.
+
 > [!IMPORTANT]
 > El encadenamiento es responsabilidad de quien llama: hay que guardar `getChainLink()` y pasarlo a la siguiente factura del mismo emisor, en orden y sin emitir dos facturas del mismo emisor a la vez.
 
@@ -136,6 +151,7 @@ El nombre del obligado en el XML se toma de `LroeTaxpayer` («APELLIDO1 APELLIDO
 - **URL del QR:** el código TicketBAI lleva caracteres del Base64 de la firma (`+`, `/`). El SDK los codifica (`%2B`, `%2F`) y calcula el CRC-8 sobre la URL ya codificada, como dice el Anexo V. Hay que comprobarlo con la herramienta de pruebas del QR de Bizkaia (`pruebatuz.bizkaia.eus/B4PEQR0C/test`) y con las URL de pruebas de Gipuzkoa y Álava.
 - **Esquemas de Zuzendu:** se usan los de Álava (`ZuzenduAlta/ZuzenduAnula_ticketBaiV1-2-2.xsd`) para los dos territorios; falta cotejarlos con los de Gipuzkoa.
 - **Política de firma de Bizkaia:** el SDK firma con la v1.2 vigente (OF 601/2025). Los ejemplos oficiales del LROE usan la v1.0; no está confirmado si Bizkaia sigue aceptando ficheros con la v1.0.
+- **Kontsulta:** no hay respuestas oficiales con datos (la de Gipuzkoa lleva nombres de campo como valores), así que la lectura se prueba con respuestas escritas a partir de los XSD. No está documentado cuándo se rellena el bloque `Error` (obligatorio en toda respuesta) ni con qué código HTTP responde un error de la consulta. El esquema de respuesta 1.0 de Gipuzkoa importa TicketBAI 1.2.1 y usa un tipo que la 1.2.2 ya no tiene, por lo que no se incluye.
 - **Tolerancia de los cuadres:** no está publicada; el validador es exacto por defecto (`InvoiceValidator.strict().withTolerance(...)` para ampliarla).
 
 ## Decisiones

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<T:KontsultaTicketBAI xmlns:T="urn:ticketbai:kontsulta" xmlns:T1="urn:ticketbai:emision" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ticketbai:kontsulta ../../HTBKontsultaWEB/src/main/resources/kontsultaV1.0.xsd ">
+  <Cabecera>
+    <IDVersion>1.0</IDVersion>
+    <Ejercicio>2022</Ejercicio>
+    <Periodo>01</Periodo>
+    <NifEmisor>99999972C</NifEmisor>
+  </Cabecera>
+  <FiltroConsulta>
+    <CabeceraFactura>
+      <SerieFactura>TBAI-2022-</SerieFactura>
+      <NumFactura>0001</NumFactura>
+      <FechaHoraExpedicionFactura>
+        <DesdeFechaHora>01-01-2022 10:00:00</DesdeFechaHora>
+        <HastaFechaHora>01-07-2022 23:59:00</HastaFechaHora>
+      </FechaHoraExpedicionFactura>
+      <FechaOperacionFactura>
+        <DesdeFecha>01-01-2022</DesdeFecha>
+        <HastaFecha>03-01-2022</HastaFecha>
+      </FechaOperacionFactura>
+      <FechaHoraPresentacionFactura>
+        <DesdeFechaHora>01-07-2022 00:00:00</DesdeFechaHora>
+        <HastaFechaHora>01-07-2022 23:59:59</HastaFechaHora>
+      </FechaHoraPresentacionFactura>
+    </CabeceraFactura>
+    <EstadoEnvio>3</EstadoEnvio>
+    <EstadoRegistro>C</EstadoRegistro>
+    <MostrarErrores>S</MostrarErrores>
+    <NumPaginaConsulta>1</NumPaginaConsulta>
+  </FiltroConsulta>
+</T:KontsultaTicketBAI>

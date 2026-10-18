@@ -49,7 +49,18 @@ public final class XsdValidator {
         LROE_240_QUERY("LROE_PJ_240_1_1_FacturasEmitidas_ConSG_ConsultaPeticion_V1_0_0.xsd"),
         LROE_240_QUERY_RESPONSE("LROE_PJ_240_1_1_FacturasEmitidas_ConSG_ConsultaRespuesta_V1_0_1.xsd"),
         LROE_140_QUERY("LROE_PF_140_1_1_Ingresos_ConfacturaConSG_ConsultaPeticion_V1_0_0.xsd"),
-        LROE_140_QUERY_RESPONSE("LROE_PF_140_1_1_Ingresos_ConfacturaConSG_ConsultaRespuesta_V1_0_1.xsd");
+        LROE_140_QUERY_RESPONSE("LROE_PF_140_1_1_Ingresos_ConfacturaConSG_ConsultaRespuesta_V1_0_1.xsd"),
+        /** Kontsulta de Álava (1.2.3): facturas enviadas, última factura y respuesta. */
+        KONTSULTA_ARABA("kontsultaV1-2-3.xsd"),
+        KONTSULTA_LATEST_ARABA("kontsultaUltimaFacturaV1-2-3.xsd"),
+        KONTSULTA_RESPONSE_ARABA("respuesta_kontsultaV1-2-3.xsd"),
+        /**
+         * Kontsulta de Gipuzkoa (1.0): facturas enviadas y última factura. Importa TicketBAI 1.2.1, que se resuelve con la
+         * 1.2.2 (los tipos de la petición no cambian). Su esquema de respuesta usa un tipo que la 1.2.2 ya no tiene y no se
+         * incluye.
+         */
+        KONTSULTA_GIPUZKOA("kontsultaV1.0.xsd"),
+        KONTSULTA_LATEST_GIPUZKOA("kontsultaUltimaFacturaV1.0.xsd");
 
         private final String file;
 
@@ -136,6 +147,9 @@ public final class XsdValidator {
         @Override
         public LSInput resolveResource(String type, String namespaceURI, String publicId, String systemId, String baseURI) {
             String file = systemId == null ? null : systemId.substring(systemId.lastIndexOf('/') + 1);
+            if ("ticketBaiV1-2-1.xsd".equals(file)) {
+                file = "ticketBaiV1-2-2.xsd";
+            }
             if (file == null || XsdValidator.class.getResource(XSD_DIR + file) == null) {
                 return null;
             }

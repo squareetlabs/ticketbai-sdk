@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<T:KontsultaTicketBAI xmlns:T="urn:ticketbai:kontsulta" xmlns:T1="urn:ticketbai:emision" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ticketbai:kontsulta ../../HTBKontsultaWEB/src/main/resources/kontsultaV1.0.xsd ">
+	<Cabecera>
+		<IDVersion>1.0</IDVersion>
+		<Ejercicio>2025</Ejercicio>
+		<Periodo>0A</Periodo>
+		<NifEmisor>99999972C</NifEmisor>
+	</Cabecera>
+	<FiltroConsulta>
+		<CabeceraFactura>
+			<NumFactura/>
+			<FechaHoraExpedicionFactura/>
+			<FechaOperacionFactura/>
+			<FechaHoraPresentacionFactura/>
+		</CabeceraFactura>
+		<EstadoEnvio>2</EstadoEnvio>
+		<EstadoRegistro>C</EstadoRegistro>
+		<MostrarErrores>S</MostrarErrores>
+		<NumPaginaConsulta>1</NumPaginaConsulta>
+	</FiltroConsulta>
+</T:KontsultaTicketBAI>

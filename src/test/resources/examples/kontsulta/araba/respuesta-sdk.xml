@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<T:KontsultaTicketBAIResponse xmlns:T="urn:ticketbai:contsultaRespuesta">
+  <Cabecera>
+    <Ejercicio>2025</Ejercicio>
+    <Periodo>1T</Periodo>
+    <Emisor>
+      <NIF>99999972C</NIF>
+      <ApellidosNombreRazonSocial>EMISOR DE PRUEBA SL</ApellidosNombreRazonSocial>
+    </Emisor>
+  </Cabecera>
+  <ResultadoConsulta>
+    <FechaHoraConsulta>20-03-2025 09:15:00</FechaHoraConsulta>
+    <NumPaginaConsulta>1</NumPaginaConsulta>
+    <ExistenRegistros>S</ExistenRegistros>
+    <Paginacion>
+      <NumPaginasTotales>2</NumPaginasTotales>
+      <ExistenMasRegistros>S</ExistenMasRegistros>
+      <NumRegistrosTotales>3</NumRegistrosTotales>
+    </Paginacion>
+    <Error>
+      <Descripcion></Descripcion>
+      <Azalpena></Azalpena>
+    </Error>
+  </ResultadoConsulta>
+  <FacturasEmitidas>
+    <Factura>
+      <DatosFactura>
+        <CabeceraFactura>
+          <SerieFactura>A2025</SerieFactura>
+          <NumFactura>0007</NumFactura>
+          <FechaHoraExpedicionFactura>14-03-2025 10:30:00</FechaHoraExpedicionFactura>
+          <FechaOperacionFactura>14-03-2025</FechaOperacionFactura>
+        </CabeceraFactura>
+        <Sujetos>
+          <Emisor>
+            <NIF>99999972C</NIF>
+            <ApellidosNombreRazonSocial>EMISOR DE PRUEBA SL</ApellidosNombreRazonSocial>
+          </Emisor>
+        </Sujetos>
+        <ImporteTotalFactura>121.00</ImporteTotalFactura>
+        <IdentificadorTBAI>TBAI-99999972C-140325-K3mQ8vT1aXy0Z-081</IdentificadorTBAI>
+        <SignatureValue>K3mQ8vT1aXy0Zr7pLw2nBc5dEf9gHj4kMs6tUv0wXy1zA2bC3dE4fG5hI6jK7lM8nO9pQ0rS1tU2vW3xY4zA5bC6dE7fG8hI9jK0</SignatureValue>
+        <Claves>
+          <IDClave>
+            <ClaveRegimenIvaOpTrascendencia>01</ClaveRegimenIvaOpTrascendencia>
+          </IDClave>
+        </Claves>
+      </DatosFactura>
+      <DatosPresentacion>
+        <NIFPresentadorUltModificacion>99999972C</NIFPresentadorUltModificacion>
+        <FechaHoraPresentacionUltModificacion>14-03-2025 10:30:05</FechaHoraPresentacionUltModificacion>
+        <ModoPresentacionUltModificacion>WEBSERVICE</ModoPresentacionUltModificacion>
+      </DatosPresentacion>
+      <SituacionRegistro>
+        <Estado>S</Estado>
+      </SituacionRegistro>
+    </Factura>
+    <Factura>
+      <DatosFactura>
+        <CabeceraFactura>
+          <SerieFactura>A2025</SerieFactura>
+          <NumFactura>0008</NumFactura>
+          <FechaHoraExpedicionFactura>15-03-2025 12:00:01</FechaHoraExpedicionFactura>
+          <FechaOperacionFactura>15-03-2025</FechaOperacionFactura>
+        </CabeceraFactura>
+        <Sujetos>
+          <Emisor>
+            <NIF>99999972C</NIF>
+            <ApellidosNombreRazonSocial>EMISOR DE PRUEBA SL</ApellidosNombreRazonSocial>
+          </Emisor>
+        </Sujetos>
+        <ImporteTotalFactura>60.50</ImporteTotalFactura>
+        <IdentificadorTBAI>TBAI-99999972C-150325-Pq7Rs8Tu9Vw0X-003</IdentificadorTBAI>
+        <SignatureValue>Pq7Rs8Tu9Vw0Xy1Za2Bc3De4Fg5Hi6Jk7Lm8No9Pq0Rs1Tu2Vw3Xy4Za5Bc6De7Fg8Hi9Jk0Lm1No2Pq3Rs4Tu5Vw6Xy7Za8Bc9D</SignatureValue>
+        <Claves>
+          <IDClave>
+            <ClaveRegimenIvaOpTrascendencia>01</ClaveRegimenIvaOpTrascendencia>
+          </IDClave>
+        </Claves>
+      </DatosFactura>
+      <DatosPresentacion/>
+      <SituacionRegistro>
+        <Estado>C</Estado>
+        <ResultadosValidacion>
+          <CodigosErrorTicketBAI>
+            <CodigoError>011</CodigoError>
+            <CodigoError>1103</CodigoError>
+          </CodigosErrorTicketBAI>
+        </ResultadosValidacion>
+      </SituacionRegistro>
+    </Factura>
+  </FacturasEmitidas>
+</T:KontsultaTicketBAIResponse>

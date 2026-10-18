@@ -39,7 +39,12 @@ public final class XsdValidator {
         LROE_240_INVOICES("LROE_PJ_240_1_1_FacturasEmitidas_ConSG_AltaPeticion_V1_0_2.xsd"),
         LROE_240_INVOICES_RESPONSE("LROE_PJ_240_1_1_FacturasEmitidas_ConSG_AltaRespuesta_V1_0_1.xsd"),
         LROE_240_ANNULMENTS("LROE_PJ_240_1_1_FacturasEmitidas_ConSG_AnulacionPeticion_V1_0_0.xsd"),
-        LROE_240_ANNULMENTS_RESPONSE("LROE_PJ_240_1_1_FacturasEmitidas_ConSG_AnulacionRespuesta_V1_0_0.xsd");
+        LROE_240_ANNULMENTS_RESPONSE("LROE_PJ_240_1_1_FacturasEmitidas_ConSG_AnulacionRespuesta_V1_0_0.xsd"),
+        /** LROE de Bizkaia, modelo 140, subcapítulo 1.1: alta (y modificación) de ingresos con factura con software garante. */
+        LROE_140_INVOICES("LROE_PF_140_1_1_Ingresos_ConfacturaConSG_AltaPeticion_V1_0_2.xsd"),
+        LROE_140_INVOICES_RESPONSE("LROE_PF_140_1_1_Ingresos_ConfacturaConSG_AltaRespuesta_V1_0_2.xsd"),
+        LROE_140_ANNULMENTS("LROE_PF_140_1_1_Ingresos_ConfacturaConSG_AnulacionPeticion_V1_0_0.xsd"),
+        LROE_140_ANNULMENTS_RESPONSE("LROE_PF_140_1_1_Ingresos_ConfacturaConSG_AnulacionRespuesta_V1_0_0.xsd");
 
         private final String file;
 

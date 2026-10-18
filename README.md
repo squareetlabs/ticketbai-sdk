@@ -23,8 +23,9 @@ Paquete Java 11+ para emitir facturas con **TicketBAI**, el sistema de las Hacie
 | Validación de negocio (cuadres, claves compatibles, campos por territorio) | ✅ Reglas publicadas, con su fuente; errores bloquean la firma |
 | Envío REST a Gipuzkoa y Álava (alta y anulación) con TLS mutuo | ✅ Probado contra un servidor local con TLS mutuo y las respuestas oficiales de Álava |
 | Zuzendu (Gipuzkoa y Álava): subsanar o modificar un alta y subsanar una anulación, y su envío | ✅ Huella y firma del original; impide cambiar emisor, serie, número, fecha y, al modificar, el total |
-| Envío al LROE de Bizkaia, modelo 240 (alta y anulación): lotes de hasta 1.000, GZIP y cabeceras `eus-bizkaia-n3` | ✅ Reconstruye el envío oficial y lee las respuestas oficiales; probado con TLS mutuo |
-| LROE modelo 140 (personas físicas: lleva además los datos de renta por ingreso) | Pendiente |
+| Envío al LROE de Bizkaia, modelos 240 y 140: alta (`A00`), modificación (`M00`) y anulación (`AN0`); lotes de hasta 1.000, GZIP y cabeceras `eus-bizkaia-n3` | ✅ Reconstruye los cuatro envíos oficiales (alta y anulación de los dos modelos) y lee sus respuestas; probado con TLS mutuo |
+| Modelo 140: datos de renta por ingreso (epígrafe del IAE, territorio, referencia catastral, IRPF distinto de la base del IVA, criterio de caja) | ✅ |
+| Modelo 240: `OtraInformacionTrascendenciaTributaria` (opcional) | Pendiente |
 
 ## Uso
 
@@ -97,11 +98,21 @@ ZuzenduFile annulFix = tbai.correctAnnulment(null, rejectedAnnulment);   // null
 En Bizkaia el fichero TicketBAI no se envía al expedir: se registra en el LROE dentro de su plazo (trimestral, o 4 días en un régimen tipo SII), en lotes de un solo obligado.
 
 ```java
+// Persona jurídica (modelo 240)
 LroeBatch batch = LroeBatch.of("B12345674", "CONSTRUCCIONES DE PRUEBA SL", Year.of(2026),
         LroeOperation.INVOICES, List.of(issued1.getSignedXml(), issued2.getSignedXml()));   // hasta 1.000
+
+// Persona física (modelo 140): cada ingreso con sus datos de renta
+LroeBatch autonomo = LroeBatch.builder(LroeModel.MODEL_140,
+                LroeTaxpayer.individual("79732487C", "ANE", "ARRIOLA", "LEJARDI"), Year.of(2026), LroeOperation.INVOICES)
+        .add(issued.getSignedXml(), IncomeDetail.activity("197330"))
+        .build();
+
 LroeResult result = new LroeClient(Environment.TEST, tls).submit(batch);
 // result.getStatus(): CORRECT / PARTIALLY_CORRECT / INCORRECT; result.getRecords(): estado de cada factura
 ```
+
+La modificación (`LroeOperation.MODIFICATIONS`) usa el mismo esquema que el alta: se envía el mismo fichero TicketBAI firmado con los datos que lo acompañan corregidos (en el 140, los de renta).
 
 > [!IMPORTANT]
 > El encadenamiento es responsabilidad de quien llama: hay que guardar `getChainLink()` y pasarlo a la siguiente factura del mismo emisor, en orden y sin emitir dos facturas del mismo emisor a la vez.

@@ -19,7 +19,7 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 /**
- * Envío al LROE de Bizkaia (servicio de entradas {@code N3B4000M/aurkezpena}): el XML del envío comprimido con GZIP,
+ * Envío al LROE de Bizkaia, modelos 240 y 140 (servicio de entradas {@code N3B4000M/aurkezpena}): el XML del envío comprimido con GZIP,
  * {@code Content-Type: application/octet-stream} y las cabeceras {@code eus-bizkaia-n3-*}, con TLS mutuo. La respuesta
  * llega comprimida con GZIP y el estado global va en las cabeceras.
  * <p>
@@ -83,11 +83,23 @@ public final class LroeClient {
                 header(response, "eus-bizkaia-n3-mensaje-respuesta"), gunzipIfNeeded(response.body()));
     }
 
-    /** Cabecera {@code eus-bizkaia-n3-data}: concepto LROE, apartado 1.1, obligado y modelo 240 con su ejercicio. */
+    /**
+     * Cabecera {@code eus-bizkaia-n3-data}: concepto LROE, apartado 1.1, obligado (en el 140, nombre y apellidos por
+     * separado) y modelo con su ejercicio.
+     */
     static String n3Data(LroeBatch batch) {
-        return "{\"con\":\"LROE\",\"apa\":\"1.1\",\"inte\":{\"nif\":\"" + json(batch.getNif()) + "\",\"nrs\":\""
-                + json(batch.getName()) + "\"},\"drs\":{\"mode\":\"240\",\"ejer\":\"" + batch.getFiscalYear().getValue()
-                + "\"}}";
+        LroeTaxpayer t = batch.getTaxpayer();
+        StringBuilder inte = new StringBuilder("{\"nif\":\"").append(json(t.getNif())).append("\",\"nrs\":\"")
+                .append(json(t.getName())).append('"');
+        if (t.isIndividual()) {
+            inte.append(",\"ap1\":\"").append(json(t.getFirstSurname())).append('"');
+            if (t.getSecondSurname() != null && !t.getSecondSurname().isBlank()) {
+                inte.append(",\"ap2\":\"").append(json(t.getSecondSurname())).append('"');
+            }
+        }
+        inte.append('}');
+        return "{\"con\":\"LROE\",\"apa\":\"1.1\",\"inte\":" + inte + ",\"drs\":{\"mode\":\""
+                + batch.getModel().code() + "\",\"ejer\":\"" + batch.getFiscalYear().getValue() + "\"}}";
     }
 
     /** Texto JSON con los caracteres no ASCII escapados, para que la cabecera HTTP sea ASCII. */

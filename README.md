@@ -23,7 +23,8 @@ Paquete Java 11+ para emitir facturas con **TicketBAI**, el sistema de las Hacie
 | Validación de negocio (cuadres, claves compatibles, campos por territorio) | ✅ Reglas publicadas, con su fuente; errores bloquean la firma |
 | Envío REST a Gipuzkoa y Álava (alta y anulación) con TLS mutuo | ✅ Probado contra un servidor local con TLS mutuo y las respuestas oficiales de Álava |
 | Zuzendu (subsanar/modificar) | Pendiente |
-| Envío por lotes al LROE de Bizkaia (modelos 240/140) | Pendiente |
+| Envío al LROE de Bizkaia, modelo 240 (alta y anulación): lotes de hasta 1.000, GZIP y cabeceras `eus-bizkaia-n3` | ✅ Reconstruye el envío oficial y lee las respuestas oficiales; probado con TLS mutuo |
+| LROE modelo 140 (personas físicas: lleva además los datos de renta por ingreso) | Pendiente |
 
 ## Uso
 
@@ -79,12 +80,24 @@ if (result.isReceived()) {
 // TransportException: no hay respuesta válida; reintentar con el MISMO fichero
 ```
 
+### Envío (Bizkaia, LROE)
+
+En Bizkaia el fichero TicketBAI no se envía al expedir: se registra en el LROE dentro de su plazo (trimestral, o 4 días en un régimen tipo SII), en lotes de un solo obligado.
+
+```java
+LroeBatch batch = LroeBatch.of("B12345674", "CONSTRUCCIONES DE PRUEBA SL", Year.of(2026),
+        LroeOperation.INVOICES, List.of(issued1.getSignedXml(), issued2.getSignedXml()));   // hasta 1.000
+LroeResult result = new LroeClient(Environment.TEST, tls).submit(batch);
+// result.getStatus(): CORRECT / PARTIALLY_CORRECT / INCORRECT; result.getRecords(): estado de cada factura
+```
+
 > [!IMPORTANT]
 > El encadenamiento es responsabilidad de quien llama: hay que guardar `getChainLink()` y pasarlo a la siguiente factura del mismo emisor, en orden y sin emitir dos facturas del mismo emisor a la vez.
 
 ## Pendiente de confirmar con las Diputaciones
 
 - **URL del QR:** el código TicketBAI lleva caracteres del Base64 de la firma (`+`, `/`). El SDK los codifica (`%2B`, `%2F`) y calcula el CRC-8 sobre la URL ya codificada, como dice el Anexo V. Hay que comprobarlo con la herramienta de pruebas del QR de Bizkaia (`pruebatuz.bizkaia.eus/B4PEQR0C/test`) y con las URL de pruebas de Gipuzkoa y Álava.
+- **Política de firma de Bizkaia:** el SDK firma con la v1.2 vigente (OF 601/2025). Los ejemplos oficiales del LROE usan la v1.0; no está confirmado si Bizkaia sigue aceptando ficheros con la v1.0.
 - **Tolerancia de los cuadres:** no está publicada; el validador es exacto por defecto (`InvoiceValidator.strict().withTolerance(...)` para ampliarla).
 
 ## Decisiones

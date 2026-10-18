@@ -11,6 +11,12 @@ public final class SignedXml {
         this.signatureValue = signatureValue;
     }
 
+    /** Fichero ya firmado (por ejemplo, el conservado para reenviarlo o para el LROE). */
+    public static SignedXml of(byte[] signedXml) {
+        byte[] copy = java.util.Objects.requireNonNull(signedXml, "signedXml").clone();
+        return new SignedXml(copy, TicketBaiSigner.signatureValueOf(copy));
+    }
+
     /** Bytes del fichero firmado. Se envían y se conservan tal cual: cualquier cambio invalida la firma. */
     public byte[] getBytes() {
         return bytes.clone();

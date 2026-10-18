@@ -30,7 +30,12 @@ public final class XsdValidator {
     public enum Schema {
         INVOICE("ticketBaiV1-2-2.xsd"),
         ANNULMENT("Anula_ticketBaiV1-2-2.xsd"),
-        RESPONSE("ticketBaiResponse.xsd");
+        RESPONSE("ticketBaiResponse.xsd"),
+        /** LROE de Bizkaia, modelo 240, subcapítulo 1.1: alta (y modificación) de facturas emitidas con software garante. */
+        LROE_240_INVOICES("LROE_PJ_240_1_1_FacturasEmitidas_ConSG_AltaPeticion_V1_0_2.xsd"),
+        LROE_240_INVOICES_RESPONSE("LROE_PJ_240_1_1_FacturasEmitidas_ConSG_AltaRespuesta_V1_0_1.xsd"),
+        LROE_240_ANNULMENTS("LROE_PJ_240_1_1_FacturasEmitidas_ConSG_AnulacionPeticion_V1_0_0.xsd"),
+        LROE_240_ANNULMENTS_RESPONSE("LROE_PJ_240_1_1_FacturasEmitidas_ConSG_AnulacionRespuesta_V1_0_0.xsd");
 
         private final String file;
 

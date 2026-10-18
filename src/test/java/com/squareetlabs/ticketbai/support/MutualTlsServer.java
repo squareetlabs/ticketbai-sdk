@@ -29,6 +29,8 @@ public final class MutualTlsServer implements AutoCloseable {
     private volatile byte[] lastBody;
     private volatile String lastContentType;
     private volatile String lastMethod;
+    private volatile com.sun.net.httpserver.Headers lastHeaders;
+    private volatile java.util.Map<String, String> responseHeaders = java.util.Map.of();
 
     public MutualTlsServer() throws Exception {
         KeyStore keyStore = KeyStore.getInstance("PKCS12");
@@ -54,6 +56,8 @@ public final class MutualTlsServer implements AutoCloseable {
         });
         server.createContext("/", exchange -> {
             lastMethod = exchange.getRequestMethod();
+            lastHeaders = exchange.getRequestHeaders();
+            responseHeaders.forEach((k, v) -> exchange.getResponseHeaders().add(k, v));
             lastContentType = exchange.getRequestHeaders().getFirst("Content-Type");
             try (InputStream in = exchange.getRequestBody()) {
                 lastBody = in.readAllBytes();
@@ -80,6 +84,15 @@ public final class MutualTlsServer implements AutoCloseable {
     public void respond(int status, byte[] body) {
         this.status = status;
         this.response = body;
+    }
+
+    public void respond(int status, byte[] body, java.util.Map<String, String> headers) {
+        this.responseHeaders = headers;
+        respond(status, body);
+    }
+
+    public String getLastHeader(String name) {
+        return lastHeaders == null ? null : lastHeaders.getFirst(name);
     }
 
     public byte[] getLastBody() {

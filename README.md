@@ -2,9 +2,6 @@
 
 Paquete Java 11+ para emitir facturas con **TicketBAI**, el sistema de las Haciendas Forales de Álava (Araba), Bizkaia (Batuz) y Gipuzkoa. Es el equivalente de [`com.squareetlabs:verifactu`](https://github.com/squareetlabs/verifactu-sdk) para los territorios forales.
 
-> [!WARNING]
-> **En desarrollo (0.1.0-SNAPSHOT).** La API puede cambiar. No usar en producción.
-
 ## Estado
 
 | Pieza | Estado |

@@ -26,6 +26,11 @@ public final class TestInvoices {
 
     /** Factura de 1.000 € + 21 % de IVA a un cliente con NIF y dirección. */
     public static Invoice simple(String number) {
+        return simpleBuilder(number).build();
+    }
+
+    /** Constructor de {@link #simple}, para variarla. */
+    public static Invoice.Builder simpleBuilder(String number) {
         return Invoice.builder()
                 .issuer("B12345674", "CONSTRUCCIONES DE PRUEBA SL")
                 .recipient(Party.withNif("11111111H", "CLIENTE DE PRUEBA").withAddress("20001", "Calle Mayor 1"))
@@ -38,8 +43,7 @@ public final class TestInvoices {
                 .breakdown(Breakdown.ofInvoice(TaxBreakdown.builder()
                         .nonExempt(NonExemptType.S1, VatDetail.of(new BigDecimal("1000"), new BigDecimal("21"),
                                 new BigDecimal("210")))
-                        .build()))
-                .build();
+                        .build()));
     }
 
     public static TicketBaiSigner signer() {

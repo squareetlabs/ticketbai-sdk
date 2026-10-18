@@ -27,7 +27,7 @@ Paquete Java 11+ para emitir facturas con **TicketBAI**, el sistema de las Hacie
 | Modelo 140: datos de renta por ingreso (epígrafe del IAE, territorio, referencia catastral, IRPF distinto de la base del IVA, criterio de caja) | ✅ |
 | Consulta del LROE (`C00`), modelos 240 y 140: filtros, paginación, estado de cada factura y recuperación del eslabón | ✅ Reconstruye las dos peticiones oficiales y lee sus respuestas con y sin resultados; probado con TLS mutuo |
 | Kontsulta (Gipuzkoa y Álava): facturas enviadas por páginas y última factura, con estado, errores y recuperación del eslabón | ✅ Reconstruye las peticiones oficiales de los dos territorios y valida con sus XSD (Álava 1.2.3, Gipuzkoa 1.0); probado con TLS mutuo |
-| Modelo 240: `OtraInformacionTrascendenciaTributaria` (opcional) | Pendiente |
+| Modelo 240: otra información con trascendencia tributaria (representante, inmuebles, acuerdo de facturación, referencia externa, cupón, entidad sucedida, disposiciones adicionales 2.ª y 5.ª, hidrocarburos) | ✅ Cumple el XSD; aplica las reglas B4_2000300, B4_2000301 y B4_2000302, las dos últimas contra el propio fichero |
 
 ## Uso
 
@@ -108,6 +108,14 @@ LroeBatch batch = LroeBatch.of("B12345674", "CONSTRUCCIONES DE PRUEBA SL", Year.
 LroeBatch autonomo = LroeBatch.builder(LroeModel.MODEL_140,
                 LroeTaxpayer.individual("79732487C", "ANE", "ARRIOLA", "LEJARDI"), Year.of(2026), LroeOperation.INVOICES)
         .add(issued.getSignedXml(), IncomeDetail.activity("197330"))
+        .build();
+
+// Modelo 240 con otra información con trascendencia tributaria
+LroeBatch conInmueble = LroeBatch.builder(LroeModel.MODEL_240,
+                LroeTaxpayer.legalEntity("B12345674", "CONSTRUCCIONES DE PRUEBA SL"), Year.of(2026), LroeOperation.INVOICES)
+        .add(issued.getSignedXml(), OtherTaxInformation.create()
+                .property(OtherTaxInformation.PropertySituation.BASQUE_COUNTRY_OR_NAVARRE, "U1234567890")
+                .externalReference("PEDIDO-4711"))
         .build();
 
 LroeResult result = new LroeClient(Environment.TEST, tls).submit(batch);

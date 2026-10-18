@@ -56,6 +56,9 @@ public final class LroeRequestBuilder {
                     income(doc, add(doc, renta, "DetalleRenta"), detail);
                 }
             }
+            if (entry.getOtherTaxInformation() != null) {
+                otherTaxInformation(doc, add(doc, item, "OtraInformacionTrascendenciaTributaria"), entry.getOtherTaxInformation());
+            }
         }
         return doc;
     }
@@ -81,6 +84,45 @@ public final class LroeRequestBuilder {
         }
         if (income.getCashCriterion() != null) {
             text(doc, detail, "CriterioCobrosYPagos", income.getCashCriterion() ? "S" : "N");
+        }
+    }
+
+    private static void otherTaxInformation(Document doc, Element block, OtherTaxInformation info) {
+        if (info.getRepresentativeNif() != null) {
+            text(doc, block, "NIFRepresentanteDeclarado", info.getRepresentativeNif());
+        }
+        if (!info.getProperties().isEmpty()) {
+            Element properties = add(doc, block, "Inmuebles");
+            for (OtherTaxInformation.Property property : info.getProperties()) {
+                Element detail = add(doc, properties, "DetalleInmueble");
+                text(doc, detail, "SituacionInmueble", property.getSituation().code());
+                if (property.getCadastralReference() != null) {
+                    text(doc, detail, "ReferenciaCatastral", property.getCadastralReference());
+                }
+            }
+        }
+        if (info.getPropertyTransferSubjectToVat() != null) {
+            text(doc, block, "ImporteTransmisionInmueblesSujetoAIVA", Amounts.format(info.getPropertyTransferSubjectToVat()));
+        }
+        if (info.getBillingAgreementNumber() != null) {
+            text(doc, block, "NumRegistroAcuerdoFacturacion", info.getBillingAgreementNumber());
+        }
+        if (info.getExternalReference() != null) {
+            text(doc, block, "ReferenciaExterna", info.getExternalReference());
+        }
+        yesNo(doc, block, "Cupon", info.getCoupon());
+        if (info.getSucceededEntityNif() != null) {
+            Element entity = add(doc, block, "EntidadSucedida");
+            text(doc, entity, "NombreRazon", info.getSucceededEntityName());
+            text(doc, entity, "NIF", info.getSucceededEntityNif());
+        }
+        yesNo(doc, block, "FacturacionDispAdicionalSegundaYQuinta", info.getAdditionalProvisionsTwoAndFive());
+        yesNo(doc, block, "HidrocarburosExtraidosDeposito", info.getHydrocarbonsFromDeposit());
+    }
+
+    private static void yesNo(Document doc, Element parent, String name, Boolean value) {
+        if (value != null) {
+            text(doc, parent, name, value ? "S" : "N");
         }
     }
 

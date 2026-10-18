@@ -14,21 +14,29 @@ import java.util.Objects;
 /**
  * Envío al LROE de Bizkaia (subcapítulo 1.1): ficheros TicketBAI firmados de <b>un solo obligado</b>, un solo modelo,
  * ejercicio y operación, hasta 1.000 por envío. Los ficheros van tal cual, en Base64. En el modelo 140 cada ingreso de
- * alta o modificación lleva además sus datos de renta.
+ * alta o modificación lleva además sus datos de renta; en el 240, cada factura puede llevar
+ * {@link OtherTaxInformation otra información con trascendencia tributaria}.
  */
 public final class LroeBatch {
 
     public static final int MAX_FILES = 1000;
     private static final int MAX_INCOME_DETAILS = 10;
 
-    /** Un fichero del envío y, en el 140, sus datos de renta. */
+    /** Un fichero del envío y, en el 140, sus datos de renta o, en el 240, su otra información tributaria. */
     public static final class Entry {
         private final byte[] file;
         private final List<IncomeDetail> incomeDetails;
+        private final OtherTaxInformation otherTaxInformation;
 
-        Entry(byte[] file, List<IncomeDetail> incomeDetails) {
+        Entry(byte[] file, List<IncomeDetail> incomeDetails, OtherTaxInformation otherTaxInformation) {
             this.file = file;
             this.incomeDetails = incomeDetails;
+            this.otherTaxInformation = otherTaxInformation;
+        }
+
+        /** Otra información con trascendencia tributaria (modelo 240), o {@code null}. */
+        public OtherTaxInformation getOtherTaxInformation() {
+            return otherTaxInformation;
         }
 
         public byte[] getFile() {
@@ -111,6 +119,24 @@ public final class LroeBatch {
          * anulación. En el modelo 140 (alta y modificación) hay que pasar de 1 a 10 detalles de renta.
          */
         public Builder add(SignedXml file, IncomeDetail... incomeDetails) {
+            return addEntry(file, null, incomeDetails);
+        }
+
+        /**
+         * Añade una factura del modelo 240 (alta o modificación) con su otra información con trascendencia tributaria.
+         *
+         * @throws IllegalArgumentException si el cupón o la facturación de las disposiciones adicionales segunda y quinta
+         *                                  no son compatibles con el fichero ({@code B4_2000301}, {@code B4_2000302})
+         */
+        public Builder add(SignedXml file, OtherTaxInformation otherTaxInformation) {
+            Objects.requireNonNull(otherTaxInformation, "otherTaxInformation");
+            if (model != LroeModel.MODEL_240 || operation == LroeOperation.ANNULMENTS) {
+                throw new IllegalArgumentException("La otra información tributaria solo va en el alta y la modificación del modelo 240");
+            }
+            return addEntry(file, otherTaxInformation.isEmpty() ? null : otherTaxInformation);
+        }
+
+        private Builder addEntry(SignedXml file, OtherTaxInformation otherTaxInformation, IncomeDetail... incomeDetails) {
             Objects.requireNonNull(file, "file");
             byte[] content = file.getBytes();
             String expectedRoot = operation == LroeOperation.ANNULMENTS ? "AnulaTicketBai" : "TicketBai";
@@ -132,11 +158,31 @@ public final class LroeBatch {
             if (!needsIncome && !details.isEmpty()) {
                 throw new IllegalArgumentException("Los datos de renta solo van en el alta y la modificación del modelo 140");
             }
+            if (otherTaxInformation != null) {
+                checkAgainstFile(otherTaxInformation, root);
+            }
             if (entries.size() == MAX_FILES) {
                 throw new IllegalArgumentException("Un envío LROE lleva como máximo 1000 ficheros");
             }
-            entries.add(new Entry(content, details));
+            entries.add(new Entry(content, details, otherTaxInformation));
             return this;
+        }
+
+        private static void checkAgainstFile(OtherTaxInformation info, Element ticketBai) {
+            if (Boolean.TRUE.equals(info.getCoupon())) {
+                Element rectification = Xml.firstChild(ticketBai, "FacturaRectificativa");
+                String code = rectification == null ? null : Xml.text(rectification, "Codigo");
+                if (!"R1".equals(code) && !"R5".equals(code)) {
+                    throw new IllegalArgumentException("El cupón solo puede ser S en una rectificativa R1 o R5 (B4_2000301)");
+                }
+            }
+            if (Boolean.TRUE.equals(info.getAdditionalProvisionsTwoAndFive())) {
+                String issuedBy = Xml.text(ticketBai, "EmitidaPorTercerosODestinatario");
+                if ("T".equals(issuedBy) || "D".equals(issuedBy)) {
+                    throw new IllegalArgumentException("La facturación de las disposiciones adicionales segunda y quinta no puede "
+                            + "ser S en una factura emitida por un tercero o por el destinatario (B4_2000302)");
+                }
+            }
         }
 
         public LroeBatch build() {

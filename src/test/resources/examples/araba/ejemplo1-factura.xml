@@ -1,0 +1,96 @@
+﻿<?xml version="1.0" encoding="UTF-8"?><T:TicketBai xmlns:T="urn:ticketbai:emision" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.w3.org/2001/XMLSchema ticketbai.xsd">
+	<Cabecera>
+		<IDVersionTBAI>1.2</IDVersionTBAI>
+	</Cabecera>
+	<Sujetos>
+		<Emisor>
+			<NIF>A01111111</NIF>
+			<ApellidosNombreRazonSocial>Empresa Ejemplo TBAI </ApellidosNombreRazonSocial>
+		</Emisor>
+		<Destinatarios>
+			<IDDestinatario>
+				<NIF>11111111H</NIF>
+				<ApellidosNombreRazonSocial>AAA, BBBBB, CCCCCCCCC</ApellidosNombreRazonSocial>
+				<CodigoPostal>01001</CodigoPostal>
+				<Direccion>Eduardo Dato 1</Direccion>
+			</IDDestinatario>
+		</Destinatarios>
+		<VariosDestinatarios>N</VariosDestinatarios>
+		<EmitidaPorTercerosODestinatario>N</EmitidaPorTercerosODestinatario>
+	</Sujetos>
+	<Factura>
+		<CabeceraFactura>
+			<SerieFactura>A2021</SerieFactura>
+			<NumFactura>123</NumFactura>
+			<FechaExpedicionFactura>04-11-2021</FechaExpedicionFactura>
+			<HoraExpedicionFactura>10:41:23</HoraExpedicionFactura>
+			<FacturaSimplificada>N</FacturaSimplificada>
+			<FacturaEmitidaSustitucionSimplificada>N</FacturaEmitidaSustitucionSimplificada>
+		</CabeceraFactura>
+		<DatosFactura>
+			<DescripcionFactura>factura ejemplo TBAI</DescripcionFactura>
+			<DetallesFactura>
+				<IDDetalleFactura>
+					<DescripcionDetalle>Artículo 1 Ejemplo</DescripcionDetalle>
+					<Cantidad>1</Cantidad>
+					<ImporteUnitario>23.356</ImporteUnitario>
+					<Descuento>2.00</Descuento>
+					<ImporteTotal>25.84</ImporteTotal>
+				</IDDetalleFactura>
+				<IDDetalleFactura>
+					<DescripcionDetalle>Artículo 2 xxx </DescripcionDetalle>
+					<Cantidad>1.50</Cantidad>
+					<ImporteUnitario>18.2</ImporteUnitario>
+					<ImporteTotal>33.03</ImporteTotal>
+				</IDDetalleFactura>
+				<IDDetalleFactura>
+					<DescripcionDetalle>Artículo 3 aaaaaaaa </DescripcionDetalle>
+					<Cantidad>18</Cantidad>
+					<ImporteUnitario>1.40</ImporteUnitario>
+					<ImporteTotal>30.49</ImporteTotal>
+				</IDDetalleFactura>
+			</DetallesFactura>
+			<ImporteTotalFactura>89.36</ImporteTotalFactura>
+			<Claves>
+				<IDClave>
+					<ClaveRegimenIvaOpTrascendencia>01</ClaveRegimenIvaOpTrascendencia>
+				</IDClave>
+			</Claves>
+		</DatosFactura>
+		<TipoDesglose>
+			<DesgloseFactura>
+				<Sujeta>
+					<NoExenta>
+						<DetalleNoExenta>
+							<TipoNoExenta>S1</TipoNoExenta>
+							<DesgloseIVA>
+								<DetalleIVA>
+									<BaseImponible>73.86</BaseImponible>
+									<TipoImpositivo>21</TipoImpositivo>
+									<CuotaImpuesto>15.50</CuotaImpuesto>
+	<OperacionEnRecargoDeEquivalenciaORegimenSimplificado>N</OperacionEnRecargoDeEquivalenciaORegimenSimplificado>
+								</DetalleIVA>
+							</DesgloseIVA>
+						</DetalleNoExenta>
+					</NoExenta>
+				</Sujeta>
+			</DesgloseFactura>
+		</TipoDesglose>
+	</Factura>
+	<HuellaTBAI>
+		<EncadenamientoFacturaAnterior>
+			<SerieFacturaAnterior>R2021</SerieFacturaAnterior>
+			<NumFacturaAnterior>35</NumFacturaAnterior>
+			<FechaExpedicionFacturaAnterior>04-11-2021</FechaExpedicionFacturaAnterior>		<SignatureValueFirmaFacturaAnterior>FCW9/v2X17sMAgm16Q02lNrhUSdK5c5LKymeeM/DcVYbgi81n/qKCEqC3AkfMjBeO/RoSy3kwWjLQeP247uRKBQG7Cj3Loyy0NOv</SignatureValueFirmaFacturaAnterior>
+		</EncadenamientoFacturaAnterior>
+<Software>
+			<LicenciaTBAI>TBAGIXuwierwwer009</LicenciaTBAI>
+			<EntidadDesarrolladora>
+				<NIF>12121212T</NIF>
+			</EntidadDesarrolladora>
+			<Nombre>nombre 9</Nombre>
+			<Version>1.0.4</Version>
+		</Software>
+		<NumSerieDispositivo>12332413</NumSerieDispositivo>
+	</HuellaTBAI>
+<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" Id="xmldsig-ee35cd19-6467-40c2-a8ee-487476711a1b"><ds:SignedInfo><ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/><ds:SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/><ds:Reference Id="xmldsig-ee35cd19-6467-40c2-a8ee-487476711a1b-ref0" URI=""><ds:Transforms><ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/></ds:Transforms><ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/><ds:DigestValue>/j7C3YYEt9b1T0E4p6mUo9rtdiLxNXKnR6eKQB1KlSQ=</ds:DigestValue></ds:Reference><ds:Reference Type="http://uri.etsi.org/01903#SignedProperties" URI="#xmldsig-ee35cd19-6467-40c2-a8ee-487476711a1b-signedprops"><ds:Transforms><ds:Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/></ds:Transforms><ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/><ds:DigestValue>l8NocWacAmjjyf69DulXkw51HljT0pcj0viM376xDkU=</ds:DigestValue></ds:Reference></ds:SignedInfo><ds:SignatureValue Id="xmldsig-ee35cd19-6467-40c2-a8ee-487476711a1b-sigvalue">fJKVIBlMa6VSSCLl5Jf09TDM+UjTZ7M1j1p1JkmhTy7erVehOBM/ZLm4BJIa54DgIbx1HMVkDoXccwt2dU1ZKiyivNjSzW/PrdH0inwWKgo6Fw17UzaTqQz7bCoRhCx63Jx71VdGniMRUHIu40KfmKgmlrktDUlfEZxsD0FAa6Ohu3BkRPEUZf6huDtSMCDV9DgzXjBlqseClgeFZgyXmQmpt1zUtIf33WTCj6GcyawhOt8iz4O8f9gUYh66BB4UJPpc/YDCDkLX8Wm7IsO5BkUrwW0aSfvPplMfuX8LLAG4/wyAT9uKzzu6nvrVzi6KJRUIbUONjl0Cdc/P9aR2mA==</ds:SignatureValue><ds:KeyInfo><ds:X509Data><ds:X509Certificate>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</ds:X509Certificate><ds:X509IssuerSerial><ds:X509IssuerName>cn=Herritar eta Erakundeen CA - CA de Ciudadanos y Entidades (4),ou=NZZ Ziurtagiri publikoa - Certificado publico SCI,o=IZENPE S.A.,c=ES</ds:X509IssuerName><ds:X509SerialNumber>1041999</ds:X509SerialNumber></ds:X509IssuerSerial><ds:X509SubjectName>serialNumber=99999990S,sn=FICTICIO,givenName=CIUDADANO,cn=CIUDADANO FICTICIO ACTIVO,dnQualifier=-dni 99999990S,ou=Condiciones de uso en www.izenpe.com nola erabili jakiteko,ou=Herritar ziurtagiria - Certificado de ciudadano,ou=Ziurtagiri onartua - Certificado reconocido,c=ES</ds:X509SubjectName></ds:X509Data></ds:KeyInfo><ds:Object><xades:QualifyingProperties xmlns:xades="http://uri.etsi.org/01903/v1.3.2#" xmlns:xades141="http://uri.etsi.org/01903/v1.4.1#" Target="#xmldsig-ee35cd19-6467-40c2-a8ee-487476711a1b"><xades:SignedProperties Id="xmldsig-ee35cd19-6467-40c2-a8ee-487476711a1b-signedprops"><xades:SignedSignatureProperties><xades:SigningTime>2022-01-17T08:01:41.629+01:00</xades:SigningTime><xades:SigningCertificate><xades:Cert><xades:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/><ds:DigestValue>ujF1mVX473SFmtYd2W0BgAJ6D3rkKZ2z6RkhhTbdDtA=</ds:DigestValue></xades:CertDigest><xades:IssuerSerial><ds:X509IssuerName>cn=Herritar eta Erakundeen CA - CA de Ciudadanos y Entidades (4),ou=NZZ Ziurtagiri publikoa - Certificado publico SCI,o=IZENPE S.A.,c=ES</ds:X509IssuerName><ds:X509SerialNumber>1041999</ds:X509SerialNumber></xades:IssuerSerial></xades:Cert></xades:SigningCertificate><xades:SignaturePolicyIdentifier><xades:SignaturePolicyId><xades:SigPolicyId><xades:Identifier>https://ticketbai.araba.eus/tbai/sinadura/</xades:Identifier></xades:SigPolicyId><xades:SigPolicyHash><ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/><ds:DigestValue>d69VEBc4ED4QbwnDtCA2JESgJiw+rwzfutcaSl5gYvM=</ds:DigestValue></xades:SigPolicyHash><xades:SigPolicyQualifiers><xades:SigPolicyQualifier><xades:SPURI>https://ticketbai.araba.eus/tbai/sinadura/</xades:SPURI></xades:SigPolicyQualifier></xades:SigPolicyQualifiers></xades:SignaturePolicyId></xades:SignaturePolicyIdentifier></xades:SignedSignatureProperties></xades:SignedProperties></xades:QualifyingProperties></ds:Object></ds:Signature></T:TicketBai>

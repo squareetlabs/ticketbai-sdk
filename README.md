@@ -13,9 +13,11 @@ Paquete Java 11+ para emitir facturas con **TicketBAI**, el sistema de las Hacie
 | Código TicketBAI de 39 caracteres | ✅ |
 | URL del QR por territorio y entorno | ✅ Con el ejemplo oficial de Gipuzkoa |
 | Territorios: política de firma y URL del QR | ✅ |
-| Modelo de factura y XML (XSD 1.2.2) | Pendiente |
+| XSD oficiales 1.2.2 (alta, anulación, respuesta) y validación contra ellos | ✅ Con los ejemplos firmados de Gipuzkoa y Álava |
+| Lectura de un fichero firmado: emisor, factura, firma y encadenamiento | ✅ |
+| Modelo de factura y construcción del XML | Pendiente |
 | Firma XAdES-EPES enveloped con la política del territorio | Pendiente |
-| Encadenamiento (100 primeros caracteres de la firma anterior) | Pendiente |
+| Encadenamiento (100 primeros caracteres de la firma anterior) | ✅ `ChainLink` (falta usarlo al construir el XML) |
 | Validación local (cuadres, claves, campos por territorio) | Pendiente |
 | Envío REST a Gipuzkoa y Álava (alta, anulación, Zuzendu) | Pendiente |
 | Envío por lotes al LROE de Bizkaia (modelos 240/140) | Pendiente |

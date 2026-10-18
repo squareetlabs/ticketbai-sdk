@@ -1,3 +1,5 @@
 * text=auto eol=lf
 *.cmd text eol=crlf
 *.p12 binary
+# Ejemplos oficiales firmados: no se normalizan los finales de línea (la firma depende de los bytes)
+src/test/resources/examples/** -text

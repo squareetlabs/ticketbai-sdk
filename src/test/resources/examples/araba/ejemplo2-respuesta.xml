@@ -1,0 +1,20 @@
+﻿<ns2:TicketBaiResponse
+    xmlns:ns2="urn:ticketbai:emision">
+    <Salida>
+        <IdentificadorTBAI>TBAI-A01111111-051121-a6f7Gx3zT2h52-080</IdentificadorTBAI>
+        <FechaRecepcion>05-11-2021 12:06:09</FechaRecepcion>
+        <Estado>00</Estado>
+        <Descripcion>Recibido</Descripcion>
+        <Azalpena>Jasota</Azalpena>
+        <ResultadosValidacion>
+            <Codigo>009</Codigo>
+            <Descripcion>AVISO: Posible error de encadenamiento</Descripcion>
+            <Azalpena>OHARRA: Balizko errorea kateatzean</Azalpena>
+        </ResultadosValidacion>
+        <ResultadosValidacion>
+            <Codigo>011</Codigo>
+            <Descripcion>AVISO: Error en verificación alta-inscripción software TicketBAI</Descripcion>
+            <Azalpena>OHARRA: Errorea gertatu da TicketBAI softwarearen alta-inskripzioa egiaztatzean</Azalpena>
+        </ResultadosValidacion>
+    </Salida>
+</ns2:TicketBaiResponse>

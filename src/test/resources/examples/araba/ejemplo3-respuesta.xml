@@ -1,0 +1,1 @@
+﻿<ns2:TicketBaiResponse xmlns:ns2="urn:ticketbai:emision">    <Salida>        <IdentificadorTBAI>TBAI-A01111111-041121-tqy2Fd4xpNHbM-191</IdentificadorTBAI>        <FechaRecepcion>04-11-2021 11:19:30</FechaRecepcion>        <Estado>00</Estado>        <Descripcion>Recibido</Descripcion>        <Azalpena>Jasota</Azalpena>    </Salida></ns2:TicketBaiResponse>

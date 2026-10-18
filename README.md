@@ -16,7 +16,7 @@ Paquete Java 11+ para emitir facturas con **TicketBAI**, el sistema de las Hacie
 | XSD oficiales 1.2.2 (alta, anulación, respuesta) y validación contra ellos | ✅ Con los ejemplos firmados de Gipuzkoa y Álava |
 | Lectura de un fichero firmado: emisor, factura, firma y encadenamiento | ✅ |
 | Modelo de factura y construcción del XML de alta | ✅ Reproduce la primera factura oficial de Gipuzkoa y la rectificativa de Álava |
-| Firma XAdES-EPES enveloped con la política del territorio | Pendiente |
+| Firma XAdES-EPES enveloped con la política del territorio (EU DSS 5.11.1) y verificación local | ✅ Verifica las firmas reales de los ejemplos de Álava |
 | Encadenamiento (100 primeros caracteres de la firma anterior) | ✅ `ChainLink`, incluido en el XML de alta |
 | Validación local (cuadres, claves, campos por territorio) | Pendiente |
 | Envío REST a Gipuzkoa y Álava (alta, anulación, Zuzendu) | Pendiente |

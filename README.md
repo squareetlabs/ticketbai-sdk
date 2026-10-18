@@ -66,7 +66,7 @@ try (TicketBaiSigner signer = TicketBaiSigner.pkcs12(p12Bytes, password)) {
 ```java
 TlsConfig tls = TlsConfig.builder()
         .clientCertificate(p12Bytes, password)      // certificado del obligado, representante, sello o dispositivo
-        .trust(sectigoR46)                          // raíces que el JDK no traiga (cambio a Sectigo, 2026-2027)
+        // las raíces Sectigo R46/E46 (cambio de 2026-2027) ya vienen incluidas; .trust(...) para añadir otras
         .build();
 TicketBaiRestClient client = new TicketBaiRestClient(Territory.GIPUZKOA, Environment.TEST, tls);
 

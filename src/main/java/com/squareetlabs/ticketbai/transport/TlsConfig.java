@@ -23,8 +23,9 @@ import java.util.Objects;
  * dispositivo) y confianza en las CA del JDK más las que se añadan.
  * <p>
  * Las tres Diputaciones cambian la cadena de sus servidores a Sectigo (producción entre noviembre de 2026 y enero de
- * 2027). Si el JDK no trae las raíces <i>Sectigo Public Server Authentication Root R46/E46</i>, hay que añadirlas con
- * {@link Builder#trust(X509Certificate)}. Nunca se desactiva la comprobación del nombre del servidor.
+ * 2027). El SDK incluye las raíces <i>Sectigo Public Server Authentication Root R46/E46</i> y las añade por defecto a las
+ * del JDK ({@link Builder#withoutBundledRoots()} para no usarlas). Nunca se desactiva la comprobación del nombre del
+ * servidor.
  */
 public final class TlsConfig {
 
@@ -40,6 +41,27 @@ public final class TlsConfig {
 
     public SSLContext getSslContext() {
         return sslContext;
+    }
+
+    private static final String[] BUNDLED_ROOTS = {
+            "/trust/sectigo-public-server-authentication-root-r46.pem",
+            "/trust/sectigo-public-server-authentication-root-e46.pem"
+    };
+
+    /** Raíces incluidas en el SDK (Sectigo R46 y E46). */
+    public static List<X509Certificate> bundledRoots() {
+        List<X509Certificate> roots = new ArrayList<>();
+        for (String resource : BUNDLED_ROOTS) {
+            try (InputStream in = TlsConfig.class.getResourceAsStream(resource)) {
+                if (in == null) {
+                    throw new IllegalStateException("Falta la raíz incluida " + resource);
+                }
+                roots.addAll(readCertificates(in));
+            } catch (IOException e) {
+                throw new IllegalStateException(e);
+            }
+        }
+        return roots;
     }
 
     /** Lee certificados X.509 (PEM o DER) de un flujo. */
@@ -59,8 +81,15 @@ public final class TlsConfig {
         private byte[] clientPkcs12;
         private char[] clientPassword;
         private final List<X509Certificate> extraTrusted = new ArrayList<>();
+        private boolean bundledRoots = true;
 
         private Builder() {
+        }
+
+        /** No añade las raíces Sectigo incluidas en el SDK (solo las del JDK y las de {@link #trust}). */
+        public Builder withoutBundledRoots() {
+            this.bundledRoots = false;
+            return this;
         }
 
         /** Certificado de cliente para el TLS mutuo (PKCS#12). Puede ser distinto del de firma. */
@@ -98,13 +127,17 @@ public final class TlsConfig {
 
         private X509TrustManager trustManager() throws GeneralSecurityException, IOException {
             X509TrustManager jdk = defaultTrustManager(null);
-            if (extraTrusted.isEmpty()) {
+            List<X509Certificate> trusted = new ArrayList<>(extraTrusted);
+            if (bundledRoots) {
+                trusted.addAll(bundledRoots());
+            }
+            if (trusted.isEmpty()) {
                 return jdk;
             }
             KeyStore extra = KeyStore.getInstance(KeyStore.getDefaultType());
             extra.load(null, null);
-            for (int i = 0; i < extraTrusted.size(); i++) {
-                extra.setCertificateEntry("extra-" + i, extraTrusted.get(i));
+            for (int i = 0; i < trusted.size(); i++) {
+                extra.setCertificateEntry("extra-" + i, trusted.get(i));
             }
             X509TrustManager added = defaultTrustManager(extra);
             return new CompositeTrustManager(jdk, added);

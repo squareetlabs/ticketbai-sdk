@@ -140,4 +140,26 @@ class TicketBaiRestClientTest {
             throw new IllegalStateException(e);
         }
     }
+
+    @Test
+    @DisplayName("Las raíces Sectigo R46 y E46 vienen incluidas, con las huellas comprobadas")
+    void bundledSectigoRoots() throws Exception {
+        java.util.List<java.security.cert.X509Certificate> roots = TlsConfig.bundledRoots();
+        java.security.MessageDigest sha256 = java.security.MessageDigest.getInstance("SHA-256");
+
+        assertEquals(2, roots.size());
+        assertEquals("7BB647A62AEEAC88BF257AA522D01FFEA395E0AB45C73F93F65654EC38F25A06",
+                hex(sha256.digest(roots.get(0).getEncoded())));
+        assertEquals("C90F26F0FB1B4018B22227519B5CA2B53E2CA5B3BE5CF18EFE1BEF47380C5383",
+                hex(sha256.digest(roots.get(1).getEncoded())));
+        assertTrue(roots.get(0).getSubjectX500Principal().getName().contains("Sectigo Public Server Authentication Root R46"));
+    }
+
+    private static String hex(byte[] bytes) {
+        StringBuilder sb = new StringBuilder();
+        for (byte b : bytes) {
+            sb.append(String.format("%02X", b));
+        }
+        return sb.toString();
+    }
 }

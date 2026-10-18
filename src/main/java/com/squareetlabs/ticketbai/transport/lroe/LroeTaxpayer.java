@@ -13,22 +13,32 @@ public final class LroeTaxpayer {
     private final String name;
     private final String firstSurname;
     private final String secondSurname;
+    private final String fullName;
 
-    private LroeTaxpayer(String nif, String name, String firstSurname, String secondSurname) {
+    private LroeTaxpayer(String nif, String name, String firstSurname, String secondSurname, String fullName) {
         this.nif = Objects.requireNonNull(nif, "nif");
         this.name = Objects.requireNonNull(name, "name");
         this.firstSurname = firstSurname;
         this.secondSurname = secondSurname;
+        this.fullName = fullName;
+    }
+
+    /**
+     * Copia con el {@code ApellidosNombreRazonSocial} del XML fijado (por defecto «APELLIDO1 APELLIDO2 NOMBRE»; los
+     * ejemplos oficiales no siguen un único orden).
+     */
+    public LroeTaxpayer withFullName(String fullName) {
+        return new LroeTaxpayer(nif, name, firstSurname, secondSurname, Objects.requireNonNull(fullName, "fullName"));
     }
 
     /** Persona jurídica (modelo 240). */
     public static LroeTaxpayer legalEntity(String nif, String businessName) {
-        return new LroeTaxpayer(nif, businessName, null, null);
+        return new LroeTaxpayer(nif, businessName, null, null, null);
     }
 
     /** Persona física (modelo 140). {@code secondSurname} puede ser {@code null}. */
     public static LroeTaxpayer individual(String nif, String givenName, String firstSurname, String secondSurname) {
-        return new LroeTaxpayer(nif, givenName, Objects.requireNonNull(firstSurname, "firstSurname"), secondSurname);
+        return new LroeTaxpayer(nif, givenName, Objects.requireNonNull(firstSurname, "firstSurname"), secondSurname, null);
     }
 
     public boolean isIndividual() {
@@ -54,6 +64,9 @@ public final class LroeTaxpayer {
 
     /** {@code ApellidosNombreRazonSocial} del XML. */
     public String getFullName() {
+        if (fullName != null) {
+            return fullName;
+        }
         if (!isIndividual()) {
             return name;
         }

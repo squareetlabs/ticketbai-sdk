@@ -44,7 +44,12 @@ public final class XsdValidator {
         LROE_140_INVOICES("LROE_PF_140_1_1_Ingresos_ConfacturaConSG_AltaPeticion_V1_0_2.xsd"),
         LROE_140_INVOICES_RESPONSE("LROE_PF_140_1_1_Ingresos_ConfacturaConSG_AltaRespuesta_V1_0_2.xsd"),
         LROE_140_ANNULMENTS("LROE_PF_140_1_1_Ingresos_ConfacturaConSG_AnulacionPeticion_V1_0_0.xsd"),
-        LROE_140_ANNULMENTS_RESPONSE("LROE_PF_140_1_1_Ingresos_ConfacturaConSG_AnulacionRespuesta_V1_0_0.xsd");
+        LROE_140_ANNULMENTS_RESPONSE("LROE_PF_140_1_1_Ingresos_ConfacturaConSG_AnulacionRespuesta_V1_0_0.xsd"),
+        /** Consulta (C00) del LROE, subcapítulo 1.1. */
+        LROE_240_QUERY("LROE_PJ_240_1_1_FacturasEmitidas_ConSG_ConsultaPeticion_V1_0_0.xsd"),
+        LROE_240_QUERY_RESPONSE("LROE_PJ_240_1_1_FacturasEmitidas_ConSG_ConsultaRespuesta_V1_0_1.xsd"),
+        LROE_140_QUERY("LROE_PF_140_1_1_Ingresos_ConfacturaConSG_ConsultaPeticion_V1_0_0.xsd"),
+        LROE_140_QUERY_RESPONSE("LROE_PF_140_1_1_Ingresos_ConfacturaConSG_ConsultaRespuesta_V1_0_1.xsd");
 
         private final String file;
 

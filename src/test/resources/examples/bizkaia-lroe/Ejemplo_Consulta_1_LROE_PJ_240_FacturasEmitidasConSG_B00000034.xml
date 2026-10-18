@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?><lrpjfecsgcp:LROEPJ240FacturasEmitidasConSGConsultaPeticion xmlns:lrpjfecsgcp="https://www.batuz.eus/fitxategiak/batuz/LROE/esquemas/LROE_PJ_240_1_1_FacturasEmitidas_ConSG_ConsultaPeticion_V1_0_0.xsd">
+	<Cabecera>
+		<Modelo>240</Modelo>
+		<Capitulo>1</Capitulo>
+		<Subcapitulo>1.1</Subcapitulo>
+		<Operacion>C00</Operacion>
+		<Version>1.0</Version>
+		<Ejercicio>2022</Ejercicio>
+		<ObligadoTributario>
+			<NIF>B00000034</NIF>
+			<ApellidosNombreRazonSocial>HOTEL ADIBIDEZ</ApellidosNombreRazonSocial>
+		</ObligadoTributario>
+	</Cabecera>
+	<FiltroConsultaFacturasEmitidasConSG>
+		<CabeceraFactura>
+			<SerieFactura>B2022</SerieFactura>
+		</CabeceraFactura>
+		<NumPaginaConsulta>1</NumPaginaConsulta>
+	</FiltroConsultaFacturasEmitidasConSG>
+</lrpjfecsgcp:LROEPJ240FacturasEmitidasConSGConsultaPeticion>

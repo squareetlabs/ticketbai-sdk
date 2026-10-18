@@ -29,6 +29,7 @@ public final class MutualTlsServer implements AutoCloseable {
     private volatile byte[] lastBody;
     private volatile String lastContentType;
     private volatile String lastMethod;
+    private volatile String lastPath;
     private volatile com.sun.net.httpserver.Headers lastHeaders;
     private volatile java.util.Map<String, String> responseHeaders = java.util.Map.of();
 
@@ -56,6 +57,7 @@ public final class MutualTlsServer implements AutoCloseable {
         });
         server.createContext("/", exchange -> {
             lastMethod = exchange.getRequestMethod();
+            lastPath = exchange.getRequestURI().getPath();
             lastHeaders = exchange.getRequestHeaders();
             responseHeaders.forEach((k, v) -> exchange.getResponseHeaders().add(k, v));
             lastContentType = exchange.getRequestHeaders().getFirst("Content-Type");
@@ -101,6 +103,10 @@ public final class MutualTlsServer implements AutoCloseable {
 
     public String getLastContentType() {
         return lastContentType;
+    }
+
+    public String getLastPath() {
+        return lastPath;
     }
 
     public String getLastMethod() {

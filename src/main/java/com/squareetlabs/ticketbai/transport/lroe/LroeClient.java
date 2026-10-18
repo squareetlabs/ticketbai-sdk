@@ -31,19 +31,29 @@ public final class LroeClient {
 
     public static final URI PRODUCTION = URI.create("https://sarrerak.bizkaia.eus/N3B4000M/aurkezpena");
     public static final URI TEST = URI.create("https://pruesarrerak.bizkaia.eus/N3B4000M/aurkezpena");
+    public static final URI PRODUCTION_QUERY = URI.create("https://sarrerak.bizkaia.eus/N3B4001M/kontsulta");
+    public static final URI TEST_QUERY = URI.create("https://pruesarrerak.bizkaia.eus/N3B4001M/kontsulta");
 
     private final URI endpoint;
+    private final URI queryEndpoint;
     private final HttpClient http;
     private final Duration requestTimeout;
 
     public LroeClient(Environment environment, TlsConfig tls) {
-        this(Objects.requireNonNull(environment, "environment") == Environment.PRODUCTION ? PRODUCTION : TEST, tls,
+        this(Objects.requireNonNull(environment, "environment") == Environment.PRODUCTION ? PRODUCTION : TEST,
+                environment == Environment.PRODUCTION ? PRODUCTION_QUERY : TEST_QUERY, tls,
                 Duration.ofSeconds(10), Duration.ofSeconds(120));
     }
 
-    /** Cliente con el servicio y los tiempos de espera explícitos (por ejemplo, para pruebas). */
+    /** Cliente con el servicio de entradas y los tiempos de espera explícitos (sin servicio de consulta). */
     public LroeClient(URI endpoint, TlsConfig tls, Duration connectTimeout, Duration requestTimeout) {
+        this(endpoint, null, tls, connectTimeout, requestTimeout);
+    }
+
+    /** Cliente con los servicios de entradas y de consulta explícitos (por ejemplo, para pruebas). */
+    public LroeClient(URI endpoint, URI queryEndpoint, TlsConfig tls, Duration connectTimeout, Duration requestTimeout) {
         this.endpoint = Objects.requireNonNull(endpoint, "endpoint");
+        this.queryEndpoint = queryEndpoint;
         this.requestTimeout = Objects.requireNonNull(requestTimeout, "requestTimeout");
         this.http = HttpClient.newBuilder()
                 .sslContext(Objects.requireNonNull(tls, "tls").getSslContext())
@@ -55,15 +65,42 @@ public final class LroeClient {
 
     /** Envía el lote y devuelve el resultado de cada fichero. */
     public LroeResult submit(LroeBatch batch) {
-        byte[] body = gzip(LroeRequestBuilder.toBytes(batch));
-        HttpRequest request = HttpRequest.newBuilder(endpoint)
+        HttpResponse<byte[]> response = post(endpoint, LroeRequestBuilder.toBytes(batch),
+                n3Data(batch.getModel(), batch.getTaxpayer(), batch.getFiscalYear().getValue()));
+        return LroeResponseParser.parse(header(response, "eus-bizkaia-n3-tipo-respuesta"),
+                header(response, "eus-bizkaia-n3-identificativo"), header(response, "eus-bizkaia-n3-codigo-respuesta"),
+                header(response, "eus-bizkaia-n3-mensaje-respuesta"), gunzipIfNeeded(response.body()));
+    }
+
+    /**
+     * Consulta ({@code C00}) las facturas registradas: sirve para conciliar el estado y para recuperar el último eslabón
+     * de la cadena.
+     *
+     * @throws TransportException si no hay respuesta válida, o si el LROE responde «Incorrecto» (con su código)
+     */
+    public LroeQueryResult query(LroeQuery query) {
+        if (queryEndpoint == null) {
+            throw new IllegalStateException("Este cliente no tiene configurado el servicio de consulta");
+        }
+        HttpResponse<byte[]> response = post(queryEndpoint, LroeQueryBuilder.toBytes(query),
+                n3Data(query.getModel(), query.getTaxpayer(), query.getFiscalYear().getValue()));
+        if ("Incorrecto".equals(header(response, "eus-bizkaia-n3-tipo-respuesta"))) {
+            throw new TransportException("La consulta del LROE es incorrecta: " + header(response, "eus-bizkaia-n3-codigo-respuesta")
+                    + " " + header(response, "eus-bizkaia-n3-mensaje-respuesta"), 200, null);
+        }
+        return LroeQueryResponseParser.parse(gunzipIfNeeded(response.body()));
+    }
+
+    private HttpResponse<byte[]> post(URI uri, byte[] xml, String n3Data) {
+        byte[] body = gzip(xml);
+        HttpRequest request = HttpRequest.newBuilder(uri)
                 .timeout(requestTimeout)
                 .header("Accept-Encoding", "gzip")
                 .header("Content-Encoding", "gzip")
                 .header("Content-Type", "application/octet-stream")
                 .header("eus-bizkaia-n3-version", "1.0")
                 .header("eus-bizkaia-n3-content-type", "application/xml")
-                .header("eus-bizkaia-n3-data", n3Data(batch))
+                .header("eus-bizkaia-n3-data", n3Data)
                 .POST(HttpRequest.BodyPublishers.ofByteArray(body))
                 .build();
         HttpResponse<byte[]> response;
@@ -78,9 +115,7 @@ public final class LroeClient {
         if (response.statusCode() != 200) {
             throw new TransportException("El LROE respondió HTTP " + response.statusCode(), response.statusCode(), null);
         }
-        return LroeResponseParser.parse(header(response, "eus-bizkaia-n3-tipo-respuesta"),
-                header(response, "eus-bizkaia-n3-identificativo"), header(response, "eus-bizkaia-n3-codigo-respuesta"),
-                header(response, "eus-bizkaia-n3-mensaje-respuesta"), gunzipIfNeeded(response.body()));
+        return response;
     }
 
     /**
@@ -88,7 +123,10 @@ public final class LroeClient {
      * separado) y modelo con su ejercicio.
      */
     static String n3Data(LroeBatch batch) {
-        LroeTaxpayer t = batch.getTaxpayer();
+        return n3Data(batch.getModel(), batch.getTaxpayer(), batch.getFiscalYear().getValue());
+    }
+
+    static String n3Data(LroeModel model, LroeTaxpayer t, int fiscalYear) {
         StringBuilder inte = new StringBuilder("{\"nif\":\"").append(json(t.getNif())).append("\",\"nrs\":\"")
                 .append(json(t.getName())).append('"');
         if (t.isIndividual()) {
@@ -99,7 +137,7 @@ public final class LroeClient {
         }
         inte.append('}');
         return "{\"con\":\"LROE\",\"apa\":\"1.1\",\"inte\":" + inte + ",\"drs\":{\"mode\":\""
-                + batch.getModel().code() + "\",\"ejer\":\"" + batch.getFiscalYear().getValue() + "\"}}";
+                + model.code() + "\",\"ejer\":\"" + fiscalYear + "\"}}";
     }
 
     /** Texto JSON con los caracteres no ASCII escapados, para que la cabecera HTTP sea ASCII. */

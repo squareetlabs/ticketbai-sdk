@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?><lrpficfcsgcp:LROEPF140IngresosConFacturaConSGConsultaPeticion xmlns:lrpficfcsgcp="https://www.batuz.eus/fitxategiak/batuz/LROE/esquemas/LROE_PF_140_1_1_Ingresos_ConfacturaConSG_ConsultaPeticion_V1_0_0.xsd">
+	<Cabecera>
+		<Modelo>140</Modelo>
+		<Capitulo>1</Capitulo>
+		<Subcapitulo>1.1</Subcapitulo>
+		<Operacion>C00</Operacion>
+		<Version>1.0</Version>
+		<Ejercicio>2022</Ejercicio>
+		<ObligadoTributario>
+			<NIF>79732487C</NIF>
+			<ApellidosNombreRazonSocial>ANE ARRIOLA LEJARDI</ApellidosNombreRazonSocial>
+		</ObligadoTributario>
+	</Cabecera>
+	<FiltroConsultaIngresosConSG>
+		<CabeceraFactura>
+			<SerieFactura>A2022</SerieFactura>
+		</CabeceraFactura>
+		<NumPaginaConsulta>1</NumPaginaConsulta>
+	</FiltroConsultaIngresosConSG>
+</lrpficfcsgcp:LROEPF140IngresosConFacturaConSGConsultaPeticion>

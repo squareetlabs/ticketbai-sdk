@@ -31,6 +31,10 @@ public final class XsdValidator {
         INVOICE("ticketBaiV1-2-2.xsd"),
         ANNULMENT("Anula_ticketBaiV1-2-2.xsd"),
         RESPONSE("ticketBaiResponse.xsd"),
+        /** Zuzendu (Gipuzkoa y Álava): subsanación o modificación de un fichero de alta. Sin firma. */
+        ZUZENDU_INVOICE("ZuzenduAlta_ticketBaiV1-2-2.xsd"),
+        /** Zuzendu (Gipuzkoa y Álava): subsanación de un fichero de anulación. Sin firma. */
+        ZUZENDU_ANNULMENT("ZuzenduAnula_ticketBaiV1-2-2.xsd"),
         /** LROE de Bizkaia, modelo 240, subcapítulo 1.1: alta (y modificación) de facturas emitidas con software garante. */
         LROE_240_INVOICES("LROE_PJ_240_1_1_FacturasEmitidas_ConSG_AltaPeticion_V1_0_2.xsd"),
         LROE_240_INVOICES_RESPONSE("LROE_PJ_240_1_1_FacturasEmitidas_ConSG_AltaRespuesta_V1_0_1.xsd"),

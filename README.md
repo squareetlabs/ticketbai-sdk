@@ -22,7 +22,7 @@ Paquete Java 11+ para emitir facturas con **TicketBAI**, el sistema de las Hacie
 | Fachada `TicketBai`: emitir (firma, XSD, código, QR, eslabón) y anular | ✅ |
 | Validación de negocio (cuadres, claves compatibles, campos por territorio) | ✅ Reglas publicadas, con su fuente; errores bloquean la firma |
 | Envío REST a Gipuzkoa y Álava (alta y anulación) con TLS mutuo | ✅ Probado contra un servidor local con TLS mutuo y las respuestas oficiales de Álava |
-| Zuzendu (subsanar/modificar) | Pendiente |
+| Zuzendu (Gipuzkoa y Álava): subsanar o modificar un alta y subsanar una anulación, y su envío | ✅ Huella y firma del original; impide cambiar emisor, serie, número, fecha y, al modificar, el total |
 | Envío al LROE de Bizkaia, modelo 240 (alta y anulación): lotes de hasta 1.000, GZIP y cabeceras `eus-bizkaia-n3` | ✅ Reconstruye el envío oficial y lee las respuestas oficiales; probado con TLS mutuo |
 | LROE modelo 140 (personas físicas: lleva además los datos de renta por ingreso) | Pendiente |
 
@@ -80,6 +80,18 @@ if (result.isReceived()) {
 // TransportException: no hay respuesta válida; reintentar con el MISMO fichero
 ```
 
+### Corrección con Zuzendu (Gipuzkoa y Álava)
+
+El fichero original no se toca ni se vuelve a firmar. Zuzendu lleva la factura corregida con la huella y los 100 primeros caracteres de la firma del original, y **no se firma**.
+
+```java
+// SUBSANAR: el original fue rechazado (01). MODIFICAR: fue recibido y hay que corregir datos (no el importe total).
+ZuzenduFile fix = tbai.correct(correctedInvoice, original.getSignedXml(), ZuzenduAction.SUBSANAR);
+SubmissionResult result = client.submitCorrection(fix);
+
+ZuzenduFile annulFix = tbai.correctAnnulment(null, rejectedAnnulment);   // null: reenviar los mismos datos
+```
+
 ### Envío (Bizkaia, LROE)
 
 En Bizkaia el fichero TicketBAI no se envía al expedir: se registra en el LROE dentro de su plazo (trimestral, o 4 días en un régimen tipo SII), en lotes de un solo obligado.
@@ -97,6 +109,7 @@ LroeResult result = new LroeClient(Environment.TEST, tls).submit(batch);
 ## Pendiente de confirmar con las Diputaciones
 
 - **URL del QR:** el código TicketBAI lleva caracteres del Base64 de la firma (`+`, `/`). El SDK los codifica (`%2B`, `%2F`) y calcula el CRC-8 sobre la URL ya codificada, como dice el Anexo V. Hay que comprobarlo con la herramienta de pruebas del QR de Bizkaia (`pruebatuz.bizkaia.eus/B4PEQR0C/test`) y con las URL de pruebas de Gipuzkoa y Álava.
+- **Esquemas de Zuzendu:** se usan los de Álava (`ZuzenduAlta/ZuzenduAnula_ticketBaiV1-2-2.xsd`) para los dos territorios; falta cotejarlos con los de Gipuzkoa.
 - **Política de firma de Bizkaia:** el SDK firma con la v1.2 vigente (OF 601/2025). Los ejemplos oficiales del LROE usan la v1.0; no está confirmado si Bizkaia sigue aceptando ficheros con la v1.0.
 - **Tolerancia de los cuadres:** no está publicada; el validador es exacto por defecto (`InvoiceValidator.strict().withTolerance(...)` para ampliarla).
 

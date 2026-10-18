@@ -2,6 +2,7 @@ package com.squareetlabs.ticketbai.transport.rest;
 
 import com.squareetlabs.ticketbai.Environment;
 import com.squareetlabs.ticketbai.Territory;
+import com.squareetlabs.ticketbai.ZuzenduFile;
 import com.squareetlabs.ticketbai.signature.SignedXml;
 import com.squareetlabs.ticketbai.transport.SubmissionResult;
 import com.squareetlabs.ticketbai.transport.TlsConfig;
@@ -55,6 +56,16 @@ public final class TicketBaiRestClient {
     /** Envía un fichero de anulación firmado. */
     public SubmissionResult submitAnnulment(SignedXml signed) {
         return post(endpoints.getAnnulments(), signed.getBytes());
+    }
+
+    /** Envía un fichero Zuzendu (subsanación o modificación de un alta, o subsanación de una anulación). */
+    public SubmissionResult submitCorrection(ZuzenduFile file) {
+        URI uri = file.getKind() == ZuzenduFile.Kind.INVOICE ? endpoints.getInvoiceCorrections()
+                : endpoints.getAnnulmentCorrections();
+        if (uri == null) {
+            throw new IllegalStateException("No hay servicio Zuzendu configurado para " + file.getKind());
+        }
+        return post(uri, file.getBytes());
     }
 
     private SubmissionResult post(URI uri, byte[] body) {

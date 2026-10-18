@@ -21,7 +21,8 @@ Paquete Java 11+ para emitir facturas con **TicketBAI**, el sistema de las Hacie
 | Verificación local de la firma (API del JDK) | ✅ Verifica las firmas reales de los ejemplos de Álava |
 | Fachada `TicketBai`: emitir (firma, XSD, código, QR, eslabón) y anular | ✅ |
 | Validación de negocio (cuadres, claves compatibles, campos por territorio) | ✅ Reglas publicadas, con su fuente; errores bloquean la firma |
-| Envío REST a Gipuzkoa y Álava (alta, anulación, Zuzendu) | Pendiente |
+| Envío REST a Gipuzkoa y Álava (alta y anulación) con TLS mutuo | ✅ Probado contra un servidor local con TLS mutuo y las respuestas oficiales de Álava |
+| Zuzendu (subsanar/modificar) | Pendiente |
 | Envío por lotes al LROE de Bizkaia (modelos 240/140) | Pendiente |
 
 ## Uso
@@ -58,6 +59,24 @@ try (TicketBaiSigner signer = TicketBaiSigner.pkcs12(p12Bytes, password)) {
     String qr = issued.getQrUrl();                              // contenido del QR
     ChainLink next = issued.getChainLink();                     // guardar para la siguiente factura
 }
+```
+
+### Envío (Gipuzkoa y Álava)
+
+```java
+TlsConfig tls = TlsConfig.builder()
+        .clientCertificate(p12Bytes, password)      // certificado del obligado, representante, sello o dispositivo
+        .trust(sectigoR46)                          // raíces que el JDK no traiga (cambio a Sectigo, 2026-2027)
+        .build();
+TicketBaiRestClient client = new TicketBaiRestClient(Territory.GIPUZKOA, Environment.TEST, tls);
+
+SubmissionResult result = client.submitInvoice(issued.getSignedXml());
+if (result.isReceived()) {
+    // 00: guardar result.getRawResponse() junto al fichero; revisar result.getValidationResults() (avisos)
+} else {
+    // 01: rechazado; se corrige con Zuzendu (subsanar) sin regenerar el fichero
+}
+// TransportException: no hay respuesta válida; reintentar con el MISMO fichero
 ```
 
 > [!IMPORTANT]

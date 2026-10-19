@@ -104,7 +104,7 @@ Pendiente de confirmar con las Diputaciones:
 
 ## Novedades
 
-**1.0.0** (en desarrollo, sin publicar) — Primera versión, sobre `javax` y DSS 5.11.1 (línea 1.x, para convivir con `com.squareetlabs:verifactu` 1.x; la línea Jakarta 2.x está en `main`). Estado de cada pieza y cómo se ha comprobado:
+**1.0.0** (en desarrollo, sin publicar) — Primera versión, sobre `javax` y DSS 5.11.1 (línea 1.x, para convivir con `com.squareetlabs:verifactu` 1.x; la línea Jakarta 2.x se publicará desde `main`, hoy en squareetlabs/ticketbai-sdk#1). Estado de cada pieza y cómo se ha comprobado:
 
 | Pieza | Comprobación |
 |---|---|

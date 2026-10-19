@@ -26,7 +26,7 @@ Todavía no está publicado. Se publicará como:
 <dependency>
     <groupId>com.squareetlabs</groupId>
     <artifactId>ticketbai</artifactId>
-    <version>0.1.0</version>
+    <version>1.0.0</version>
 </dependency>
 ```
 
@@ -38,7 +38,7 @@ cd ticketbai-sdk
 ./mvnw clean install
 ```
 
-y en tu proyecto, la versión `0.1.0-SNAPSHOT`.
+y en tu proyecto, la versión `1.0.0-SNAPSHOT`.
 
 ## Configuración
 
@@ -104,7 +104,7 @@ Pendiente de confirmar con las Diputaciones:
 
 ## Novedades
 
-**0.1.0** (en desarrollo, sin publicar) — Primera versión. Estado de cada pieza y cómo se ha comprobado:
+**1.0.0** (en desarrollo, sin publicar) — Primera versión, sobre `javax` y DSS 5.11.1 (línea 1.x, para convivir con `com.squareetlabs:verifactu` 1.x; la línea Jakarta 2.x está en `main`). Estado de cada pieza y cómo se ha comprobado:
 
 | Pieza | Comprobación |
 |---|---|
@@ -402,7 +402,7 @@ src/
 
 ## Dependencias principales
 
-- **EU DSS 5.11.1**: firma XAdES (la misma versión que el SDK de VERI\*FACTU)
+- **EU DSS 5.11.1**: firma XAdES (la misma versión que el SDK de VERI\*FACTU 1.x)
 - **JDK**: `java.net.http` para el transporte, DOM para el XML y `javax.xml.crypto` para verificar firmas
 - **JUnit 5**: testing
 

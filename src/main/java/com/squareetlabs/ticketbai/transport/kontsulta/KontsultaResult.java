@@ -179,7 +179,8 @@ public final class KontsultaResult {
      * La factura más reciente por fecha y hora de expedición (en «última factura», la única). La fecha y la hora son
      * locales y sin huso, y Kontsulta no devuelve el encadenamiento de cada factura: en la hora repetida del cambio de
      * hora (último domingo de octubre, de 02:00 a 02:59 dos veces) la más reciente por hora puede no ser la última
-     * emitida. Para el último eslabón de la cadena, usa la consulta de «última factura».
+     * emitida. Para el último eslabón de la cadena, usa la consulta de «última factura»
+     * ({@link KontsultaClient#latest(String)}).
      */
     public Optional<Invoice> latest() {
         return invoices.stream().filter(i -> i.getIssuedAt() != null).max(Comparator.comparing(Invoice::getIssuedAt));

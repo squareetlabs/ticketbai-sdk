@@ -7,7 +7,10 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Resultado de una consulta del LROE: paginación y, por cada factura, los datos que permiten <b>recuperar la cadena</b>
@@ -154,11 +157,21 @@ public final class LroeQueryResult {
     }
 
     /**
-     * La factura más reciente de esta página por fecha y hora de expedición: candidata a último eslabón de la cadena.
-     * Para recuperar la cadena con seguridad hay que recorrer todas las páginas y comprobar el encadenamiento.
+     * Candidata a último eslabón de la cadena en esta página: la factura que ninguna otra de la página encadena y, si
+     * hay varias (por ejemplo, una página con dos cadenas o sin encadenamiento entre sus facturas), la más reciente por
+     * fecha y hora de expedición. Manda el encadenamiento porque la fecha y la hora son locales y sin huso: en la hora
+     * repetida del cambio de hora (último domingo de octubre, de 02:00 a 02:59 dos veces) una factura de la primera
+     * pasada puede tener una hora posterior a la de otra emitida después. Para recuperar la cadena con seguridad hay que
+     * recorrer todas las páginas y comprobar el encadenamiento.
      */
     public Optional<Invoice> latest() {
-        return invoices.stream().max(Comparator.comparing(Invoice::getIssueDate)
+        Set<ChainLink> chained = invoices.stream().map(Invoice::getPreviousLink).filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+        // Sin el prefijo de su firma una factura no se puede comparar con un encadenamiento: cuenta como no encadenada.
+        List<Invoice> unchained = invoices.stream()
+                .filter(i -> i.getSignatureValuePrefix() == null || !chained.contains(i.toChainLink()))
+                .collect(Collectors.toList());
+        return (unchained.isEmpty() ? invoices : unchained).stream().max(Comparator.comparing(Invoice::getIssueDate)
                 .thenComparing(i -> i.getIssueTime() == null ? LocalTime.MIN : i.getIssueTime()));
     }
 }

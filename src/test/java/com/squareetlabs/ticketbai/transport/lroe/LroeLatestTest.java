@@ -51,6 +51,18 @@ class LroeLatestTest {
         LroeQueryResult.Invoice secondPass = invoice("0002", LocalTime.of(2, 30), 'b', firstPass);
 
         assertEquals("0002", page(List.of(secondPass, firstPass)).latest().orElseThrow().getNumber());
+        assertEquals("0002", page(List.of(firstPass, secondPass)).latest().orElseThrow().getNumber());
+    }
+
+    @Test
+    @DisplayName("Una factura sin firma en la respuesta no impide elegir el último eslabón")
+    void invoiceWithoutSignature() {
+        LroeQueryResult.Invoice first = invoice("0001", LocalTime.of(9, 0), 'a', null);
+        LroeQueryResult.Invoice second = invoice("0002", LocalTime.of(10, 0), 'b', first);
+        LroeQueryResult.Invoice unsigned = new LroeQueryResult.Invoice("A", "0003", DAY, LocalTime.of(8, 0),
+                new BigDecimal("121.00"), null, null, "Correcto", null, null, "25-10-2026 03:15:00");
+
+        assertEquals("0002", page(List.of(unsigned, first, second)).latest().orElseThrow().getNumber());
     }
 
     @Test

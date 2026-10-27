@@ -1,6 +1,6 @@
 # TicketBAI Java - Facturación electrónica en el País Vasco
 
-Paquete Java 11+ (Jakarta EE) para emitir y registrar facturas con **TicketBAI**, el sistema de las Haciendas Forales de Álava (Araba), Bizkaia (Batuz) y Gipuzkoa. Es el equivalente de [`com.squareetlabs:verifactu`](https://github.com/squareetlabs/verifactu-sdk) para los territorios forales, y puede convivir con él en la misma aplicación si usas la misma línea de los dos SDK (2.x con 2.x, 1.x con 1.x; ver [Versiones y soporte](#versiones-y-soporte)).
+Paquete Java 17+ (Jakarta EE) para emitir y registrar facturas con **TicketBAI**, el sistema de las Haciendas Forales de Álava (Araba), Bizkaia (Batuz) y Gipuzkoa. Es el equivalente de [`com.squareetlabs:verifactu`](https://github.com/squareetlabs/verifactu-sdk) para los territorios forales, y puede convivir con él en la misma aplicación si usas la misma línea de los dos SDK (2.x con 2.x, 1.x con 1.x; ver [Versiones y soporte](#versiones-y-soporte)).
 
 ## Características principales
 
@@ -104,7 +104,7 @@ Pendiente de confirmar con las Diputaciones:
 
 ## Novedades
 
-**2.0.0** (en desarrollo, sin publicar) — Línea Jakarta EE. EU DSS pasa de 5.11.1 a 6.5.1, que usa `jakarta.xml.bind`, y JAXB se alinea con la versión de `com.squareetlabs:verifactu` 2.x (4.0.5 / 4.0.9). La API no cambia, pero `TicketBaiSigner.fromToken(...)` recibe ahora un `SignatureTokenConnection` de DSS 6. El XML firmado y la firma XAdES-EPES no cambian. La aplicación debe estar sobre Jakarta (por ejemplo, Spring Boot 3 o superior). Para aplicaciones sobre `javax`, usa la línea 1.x.
+**2.0.0** (en desarrollo, sin publicar) — Línea Jakarta EE, compilada para **Java 17** (como `com.squareetlabs:verifactu` 2.x). EU DSS pasa de 5.11.1 a 6.5.1, que usa `jakarta.xml.bind`, y JAXB se alinea con la versión de `com.squareetlabs:verifactu` 2.x (4.0.5 / 4.0.9). La API no cambia, pero `TicketBaiSigner.fromToken(...)` recibe ahora un `SignatureTokenConnection` de DSS 6. El XML firmado y la firma XAdES-EPES no cambian. La aplicación debe estar sobre Jakarta (por ejemplo, Spring Boot 3 o superior). Para aplicaciones sobre `javax`, usa la línea 1.x.
 
 **1.0.0** (en desarrollo, sin publicar) — Primera versión, sobre `javax` y DSS 5.11.1. Estado de cada pieza y cómo se ha comprobado: Estado de cada pieza y cómo se ha comprobado:
 
@@ -411,7 +411,7 @@ src/
 
 ## Requisitos
 
-- Java 11 o superior y una aplicación sobre Jakarta EE (desde la 2.0.0; la línea 1.x funciona sobre `javax`)
+- Java 17 o superior y una aplicación sobre Jakarta EE (desde la 2.0.0; la línea 1.x funciona con Java 11 y `javax`)
 - Maven 3+ (o el `./mvnw` incluido)
 - Certificado digital válido para firma electrónica
 - Licencia TicketBAI del software garante, que da cada Diputación
@@ -422,7 +422,7 @@ El SDK mantiene dos líneas, con el mismo número mayor que el SDK de VERI\*FACT
 
 | Línea | Rama | Plataforma | Firma | Convive con | Estado |
 | --- | --- | --- | --- | --- | --- |
-| 2.x | `main` | Java 11+, Jakarta EE | EU DSS 6.5, JAXB 4.0 | `com.squareetlabs:verifactu` 2.x | Desarrollo activo |
+| 2.x | `main` | Java 17+, Jakarta EE | EU DSS 6.5, JAXB 4.0 | `com.squareetlabs:verifactu` 2.x | Desarrollo activo |
 | 1.x | `1.x` | Java 11+, `javax` | EU DSS 5.11 | `com.squareetlabs:verifactu` 1.x | Mantenimiento |
 
 - Las novedades entran en `main` (2.x).

@@ -85,6 +85,95 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <version>3.2.5</version>
       </plugin>
+
+      <!-- Jar de fuentes y de javadoc: Maven Central los exige junto al jar -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>3.3.1</version>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <goals>
+              <goal>jar-no-fork</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>3.11.2</version>
+        <executions>
+          <execution>
+            <id>attach-javadocs</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <doclint>none</doclint>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
+
+  <!--
+    Perfil "release": firma GPG y publicacion en Maven Central.
+    No se activa por defecto, para no exigir claves GPG a quien solo compila
+    o ejecuta tests en local. Se invoca explicitamente en CI con "-P release".
+    Requiere:
+      - Un servidor "central" en settings.xml (usuario/token del Central
+        Publisher Portal, https://central.sonatype.com), generado por
+        actions/setup-java a partir de los secretos CENTRAL_USERNAME y
+        CENTRAL_PASSWORD.
+      - Una clave GPG importada por actions/setup-java (secreto
+        GPG_PRIVATE_KEY) y su passphrase en la variable de entorno
+        GPG_PASSPHRASE (secreto GPG_PASSPHRASE).
+  -->
+  <profiles>
+    <profile>
+      <id>release</id>
+      <build>
+        <plugins>
+          <!-- Firma GPG de todos los artefactos (jar, sources, javadoc, pom) -->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>3.2.8</version>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+
+          <!-- Empaqueta y publica en el Central Publisher Portal -->
+          <plugin>
+            <groupId>org.sonatype.central</groupId>
+            <artifactId>central-publishing-maven-plugin</artifactId>
+            <version>0.11.0</version>
+            <extensions>true</extensions>
+            <configuration>
+              <publishingServerId>central</publishingServerId>
+              <!--
+                Manual la primera vez: tras "mvn deploy" hay que entrar en
+                https://central.sonatype.com/publishing/deployments y pulsar
+                "Publish" cuando la validacion termine en OK. Una vez
+                comprobado que el pipeline funciona, se puede poner en true
+                para que el release quede totalmente automatizado.
+              -->
+              <autoPublish>false</autoPublish>
+              <waitUntil>validated</waitUntil>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>

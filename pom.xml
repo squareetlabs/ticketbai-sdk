@@ -4,7 +4,7 @@
   <groupId>com.squareetlabs</groupId>
   <artifactId>ticketbai</artifactId>
   <packaging>jar</packaging>
-  <version>2.0.0-SNAPSHOT</version>
+  <version>2.0.0</version>
   <name>ticketbai</name>
   <description>Java package for TicketBAI electronic invoicing (Araba, Bizkaia and Gipuzkoa)</description>
   <url>https://github.com/squareetlabs/ticketbai-sdk</url>

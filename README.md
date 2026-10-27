@@ -20,7 +20,7 @@ Paquete Java 17+ (Jakarta EE) para emitir y registrar facturas con **TicketBAI**
 
 ### Opción 1: Desde Maven Central
 
-Todavía no está publicado. Se publicará como:
+Publicado en Maven Central como `com.squareetlabs:ticketbai`:
 
 ```xml
 <dependency>
@@ -30,6 +30,14 @@ Todavía no está publicado. Se publicará como:
 </dependency>
 ```
 
+Con Gradle:
+
+```groovy
+implementation 'com.squareetlabs:ticketbai:2.0.0'
+```
+
+La 2.x exige Java 17 y una aplicación sobre Jakarta EE. Para una aplicación sobre `javax` o sobre Java 11–16, usa la `1.0.0` (línea 1.x; ver [Versiones y soporte](#versiones-y-soporte)).
+
 ### Opción 2: Desde el repositorio local
 
 ```bash
@@ -38,7 +46,7 @@ cd ticketbai-sdk
 ./mvnw clean install
 ```
 
-y en tu proyecto, la versión `2.0.0-SNAPSHOT`.
+y en tu proyecto, la versión que indica el `pom.xml`.
 
 ## Configuración
 
@@ -104,9 +112,9 @@ Pendiente de confirmar con las Diputaciones:
 
 ## Novedades
 
-**2.0.0** (en desarrollo, sin publicar) — Línea Jakarta EE, compilada para **Java 17** (como `com.squareetlabs:verifactu` 2.x). EU DSS pasa de 5.11.1 a 6.5.1, que usa `jakarta.xml.bind`, y JAXB se alinea con la versión de `com.squareetlabs:verifactu` 2.x (4.0.5 / 4.0.9). La API no cambia, pero `TicketBaiSigner.fromToken(...)` recibe ahora un `SignatureTokenConnection` de DSS 6. El XML firmado y la firma XAdES-EPES no cambian. La aplicación debe estar sobre Jakarta (por ejemplo, Spring Boot 3 o superior). Para aplicaciones sobre `javax`, usa la línea 1.x.
+**2.0.0** — Línea Jakarta EE, compilada para **Java 17** (como `com.squareetlabs:verifactu` 2.x). EU DSS pasa de 5.11.1 a 6.5.1, que usa `jakarta.xml.bind`, y JAXB se alinea con la versión de `com.squareetlabs:verifactu` 2.x (4.0.5 / 4.0.9). La API no cambia, pero `TicketBaiSigner.fromToken(...)` recibe ahora un `SignatureTokenConnection` de DSS 6. El XML firmado y la firma XAdES-EPES no cambian. La aplicación debe estar sobre Jakarta (por ejemplo, Spring Boot 3 o superior). Para aplicaciones sobre `javax`, usa la línea 1.x.
 
-**1.0.0** (en desarrollo, sin publicar) — Primera versión, sobre `javax` y DSS 5.11.1. Estado de cada pieza y cómo se ha comprobado: Estado de cada pieza y cómo se ha comprobado:
+**1.0.0** — Primera versión, sobre `javax` y DSS 5.11.1. Estado de cada pieza y cómo se ha comprobado:
 
 | Pieza | Comprobación |
 |---|---|

@@ -20,7 +20,7 @@ Paquete Java 11+ para emitir y registrar facturas con **TicketBAI**, el sistema 
 
 ### Opción 1: Desde Maven Central
 
-Todavía no está publicado. Se publicará como:
+Publicado en Maven Central como `com.squareetlabs:ticketbai`:
 
 ```xml
 <dependency>
@@ -30,6 +30,14 @@ Todavía no está publicado. Se publicará como:
 </dependency>
 ```
 
+Con Gradle:
+
+```groovy
+implementation 'com.squareetlabs:ticketbai:1.0.0'
+```
+
+La 1.x es la línea `javax` (Java 11+, EU DSS 5.11.1), para convivir con `com.squareetlabs:verifactu` 1.x. Para una aplicación sobre Jakarta EE y Java 17, usa la `2.0.0` (línea 2.x, rama `main`).
+
 ### Opción 2: Desde el repositorio local
 
 ```bash
@@ -38,7 +46,7 @@ cd ticketbai-sdk
 ./mvnw clean install
 ```
 
-y en tu proyecto, la versión `1.0.0-SNAPSHOT`.
+y en tu proyecto, la versión que indica el `pom.xml`.
 
 ## Configuración
 
@@ -104,7 +112,7 @@ Pendiente de confirmar con las Diputaciones:
 
 ## Novedades
 
-**1.0.0** (en desarrollo, sin publicar) — Primera versión, sobre `javax` y DSS 5.11.1 (línea 1.x, para convivir con `com.squareetlabs:verifactu` 1.x; la línea Jakarta 2.x se publicará desde `main`, hoy en squareetlabs/ticketbai-sdk#1). Estado de cada pieza y cómo se ha comprobado:
+**1.0.0** — Primera versión, sobre `javax` y DSS 5.11.1 (línea 1.x, para convivir con `com.squareetlabs:verifactu` 1.x; la línea Jakarta 2.x, para Java 17, está en `main`). Estado de cada pieza y cómo se ha comprobado:
 
 | Pieza | Comprobación |
 |---|---|
